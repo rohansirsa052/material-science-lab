@@ -41,13 +41,22 @@ function init() {
   canvas.addEventListener("mousedown", onMouseDownHandler);
   canvas.addEventListener("mousemove", onMouseMoveHandler);
   window.addEventListener("mouseup", onMouseUpHandler);
-  canvas.addEventListener("mousewheel", onMouseWheelHandler)
+  canvas.addEventListener("mousewheel", onMouseWheelHandler);
 
   canvas.addEventListener("drop", onElementDrop);
+  document.addEventListener("touchend", (e) => {
+    onElementDrop(e.touches[0]);
+  });
 
   canvas.addEventListener("contextmenu", onContextMenuHandler);
 
   canvas.addEventListener("click", onClickHandler);
+
+  canvas.addEventListener("touchstart", (e) => onMouseDownHandler(e.touches[0]));
+  canvas.addEventListener("touchmove", (e) => onMouseMoveHandler(e.touches[0]));
+  window.addEventListener("touchend", (e) => onMouseUpHandler(e.touches[0]));
+  canvas.addEventListener("mousewheel", onMouseWheelHandler);
+  canvas.addEventListener("drop", onElementDrop);
 
   ctx.refresh = () => {
     canvas.width = canvasWidth * devicePixelRatio;
@@ -116,7 +125,8 @@ function onMouseWheelHandler(event) {
 }
 
 function onElementDrop(event) {
-  switch (draggedElement.id) {
+  if (!draggedElement) return;
+  switch (draggedElement.getAttribute("label")) {
     case "utmMachine":
       utm.init();
       break;
@@ -124,7 +134,6 @@ function onElementDrop(event) {
       vc.init();
       break;
   }
-  draggedElement = null;
 }
 
 window.onload = init;
@@ -132,6 +141,54 @@ window.onload = init;
 slider.addEventListener("mousedown", () => (dragging = true));
 document.addEventListener("mousemove", slideWindow);
 document.addEventListener("mouseup", () => (dragging = false));
+
+slider.addEventListener("touchstart", (e) => {
+  dragging = true;
+});
+
+document.addEventListener("touchstart", (e) => {
+  // draggedElement = e.touches[0].target;
+  console.log(draggedElement);
+  if (draggedElement) {
+    draggedElement.remove();
+    draggedElement = null;
+  }
+  tar = e.touches[0].target;
+  if (tar.getAttribute("label") == "utmMachine" || tar.getAttribute("label") == "vernierCaliper") {
+    img = document.createElement("img");
+    img.src = tar.src;
+    img.setAttribute("label", tar.getAttribute("label"));
+    img.onload = () => {
+      document.body.appendChild(img);
+      draggedElement = img;
+    };
+  }
+});
+
+document.addEventListener("touchmove", (e) => {
+  slideWindow(e.touches[0]);
+  if (!draggedElement) return;
+
+  draggedElement.style.position = "absolute";
+  draggedElement.style.left = e.touches[0].clientX + "px";
+  draggedElement.style.top = e.touches[0].clientY + "px";
+  // if (draggedElement.id == "vernierCaliper" || draggedElement.id == "utmMachine") {
+
+  //   draggedElement.style.position = "absolute";
+  //   draggedElement.style.left = e.touches[0].clientX + "px";
+  //   draggedElement.style.top = e.touches[0].clientY + "px";
+  // }
+});
+
+document.addEventListener("touchend", () => {
+  dragging = false;
+  if (draggedElement) {
+    draggedElement.style.display = "none";
+  }
+});
+
+// document.addEventListener("touch", (evt)=>{console.log(evt);})
+// document.addEventListener("touchmove")
 
 document.addEventListener("dragstart", (event) => {
   // store a ref. on the dragged elem
@@ -142,11 +199,6 @@ document.addEventListener("dragover", (event) => {
   // prevent default to allow drop
   event.preventDefault();
 });
-
-// canvas.oncontextmenu = function (e) {
-//   e.preventDefault();
-//   e.stopPropagation();
-// };
 
 function slideWindow(e) {
   if (dragging) {
