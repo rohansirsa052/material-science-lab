@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simulator</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="menu">
+        <h2 class="text-center">Tools</h2>
+        <hr />
+        <div class="list text-center">
+          <img id="utmMachine" src="assets/img/utm-machine-logo.png" width="100" draggable="true" />
+          <p>UTM Machine</p>
+          <hr />
+          <img id="vernierCaliper" src="assets/img/venier-caliper-logo-sm.png" draggable="true" width="200" />
+          <p>Vernier Caliper</p>
+          <hr />
+        </div>
+      </div>
+      <div class="slider" id="slider"></div>
+      <div class="main">
+        <canvas class="dropzone" id="gui">Your browser does not support the HTML5 canvas tag.</canvas>
+      </div>
+    </div>
+
+    <script src="js/context.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

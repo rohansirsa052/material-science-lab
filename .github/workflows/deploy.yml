@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - main
+name: 🚀 Deploy website on push (Master)
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v2
+      
+      - name: Auto Minify
+        uses: nizarmah/auto-minify@v2.1
+
+      - name: 📂 Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with:
+          server: ${{ secrets.ftp_hostname }}
+          username: ${{ secrets.ftp_username }}
+          password: ${{ secrets.ftp_password }}
+          server-dir: htdocs/
