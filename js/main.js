@@ -1,19 +1,15 @@
 const canvas = document.getElementById("gui");
-var menu = document.querySelector(".menu");
-var main = document.querySelector(".main");
-var slider = document.getElementById("slider");
+const menu = document.querySelector(".menu");
+const main = document.querySelector(".main");
+const slider = document.getElementById("slider");
 
 var dragging = false;
 var draggedElement;
-
-var vernierCaliper;
-var bgColor = "rgb(0,64,84)";
-var fgColor = "orange";
 var ctx;
-// var canvasWidthRatio = 0.78;
+
 var utm = null;
 var vc = null;
-// var canvasWidth = main.innerWidth - 10;
+
 var canvasWidth = main.offsetWidth - 20;
 var canvasHeight = main.offsetHeight - 20;
 
@@ -21,19 +17,10 @@ function init() {
   ctx = canvas.getContext("2d");
   ctx.font = "30px Arial";
   ctx.lineWidth = 1.5;
-  // canvas.width = window.innerWidth * devicePixelRatio;
-  // canvas.height = window.innerHeight * devicePixelRatio;
-  // canvas.style.width = window.innerWidth * canvasWidthRatio + "px";
-  // canvas.style.height = window.innerHeight + "px";
-  // scale = canvas.width / 8000;
-
-  // vernierCaliper = VernierCaliper(canvas, ctx);
 
   utm = UTM(canvas, ctx);
-  // utm.init();
 
   vc = VernierCaliper(canvas, ctx);
-  // vc.init();
 
   //Add event listeners
   window.addEventListener("resize", resize);
@@ -71,9 +58,6 @@ function init() {
         ctx.fillRect(i, j, 3, 3);
       }
     }
-    // ctx.fillStyle = "#2b2b2b";
-    // ctx.fillStyle = "#000000";
-    // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (vc) vc.paint();
     if (utm) utm.paint();
@@ -111,21 +95,27 @@ function onContextMenuHandler(event) {
 
   if (utm) utm.onContextMenuHandler(event);
   if (vc) vc.onContextMenuHandler(event);
-  // console.log(clientX, clientY);
 }
 
 function onClickHandler(event) {
+  event.preventDefault();
+  event.stopPropagation();
+
   if (utm) utm.onClickHandler(event);
   if (vc) vc.onClickHandler(event);
 }
 
 function onMouseWheelHandler(event) {
+  event.preventDefault();
+  event.stopPropagation();
+
   if (utm) utm.onMouseWheelHandler(event);
   if (vc) vc.onMouseWheelHandler(event);
 }
 
 function onElementDrop(event) {
   if (!draggedElement) return;
+
   switch (draggedElement.getAttribute("label")) {
     case "utmMachine":
       utm.init();
@@ -138,61 +128,66 @@ function onElementDrop(event) {
 
 window.onload = init;
 
+/* Window Controls */
+
 slider.addEventListener("mousedown", () => (dragging = true));
 document.addEventListener("mousemove", slideWindow);
 document.addEventListener("mouseup", () => (dragging = false));
 
 slider.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+
   dragging = true;
 });
 
-document.addEventListener("touchstart", (e) => {
-  // draggedElement = e.touches[0].target;
-  console.log(draggedElement);
-  if (draggedElement) {
-    draggedElement.remove();
-    draggedElement = null;
-  }
-  tar = e.touches[0].target;
-  if (tar.getAttribute("label") == "utmMachine" || tar.getAttribute("label") == "vernierCaliper") {
-    img = document.createElement("img");
-    img.src = tar.src;
-    img.setAttribute("label", tar.getAttribute("label"));
-    img.onload = () => {
-      document.body.appendChild(img);
-      draggedElement = img;
-    };
-  }
-});
+document.addEventListener(
+  "touchstart",
+  (e) => {
+    if (draggedElement) {
+      draggedElement.remove();
+      draggedElement = null;
+    }
 
-document.addEventListener("touchmove", (e) => {
-  slideWindow(e.touches[0]);
-  if (!draggedElement) return;
+    let tar = e.touches[0].target;
+    if (tar.getAttribute("label") == "utmMachine" || tar.getAttribute("label") == "vernierCaliper") {
+      img = document.createElement("img");
+      img.src = tar.src;
+      img.setAttribute("label", tar.getAttribute("label"));
+      img.onload = () => {
+        document.body.appendChild(img);
+        draggedElement = img;
+      };
+    }
+  },
+  { passive: false }
+);
 
-  draggedElement.style.position = "absolute";
-  draggedElement.style.left = e.touches[0].clientX + "px";
-  draggedElement.style.top = e.touches[0].clientY + "px";
-  // if (draggedElement.id == "vernierCaliper" || draggedElement.id == "utmMachine") {
+document.addEventListener(
+  "touchmove",
+  (e) => {
+    slideWindow(e.touches[0]);
+    if (!draggedElement) return;
 
-  //   draggedElement.style.position = "absolute";
-  //   draggedElement.style.left = e.touches[0].clientX + "px";
-  //   draggedElement.style.top = e.touches[0].clientY + "px";
-  // }
-});
+    draggedElement.style.position = "absolute";
+    draggedElement.style.left = e.touches[0].clientX + "px";
+    draggedElement.style.top = e.touches[0].clientY + "px";
+  },
+  { passive: false }
+);
 
-document.addEventListener("touchend", () => {
+document.addEventListener("touchend", (e) => {
   dragging = false;
   if (draggedElement) {
     draggedElement.style.display = "none";
   }
 });
 
-// document.addEventListener("touch", (evt)=>{console.log(evt);})
-// document.addEventListener("touchmove")
-
 document.addEventListener("dragstart", (event) => {
   // store a ref. on the dragged elem
   draggedElement = event.target;
+  e.preventDefault();
+  e.stopPropagation();
 });
 
 document.addEventListener("dragover", (event) => {
