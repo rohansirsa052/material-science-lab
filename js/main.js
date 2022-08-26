@@ -141,40 +141,32 @@ slider.addEventListener("touchstart", (e) => {
   dragging = true;
 });
 
-document.addEventListener(
-  "touchstart",
-  (e) => {
-    if (draggedElement) {
-      draggedElement.remove();
-      draggedElement = null;
-    }
+document.addEventListener("touchstart", (e) => {
+  if (draggedElement) {
+    draggedElement.remove();
+    draggedElement = null;
+  }
 
-    let tar = e.touches[0].target;
-    if (tar.getAttribute("label") == "utmMachine" || tar.getAttribute("label") == "vernierCaliper") {
-      img = document.createElement("img");
-      img.src = tar.src;
-      img.setAttribute("label", tar.getAttribute("label"));
-      img.onload = () => {
-        document.body.appendChild(img);
-        draggedElement = img;
-      };
-    }
-  },
-  { passive: false }
-);
+  let tar = e.touches[0].target;
+  if (tar.getAttribute("label") == "utmMachine" || tar.getAttribute("label") == "vernierCaliper") {
+    img = document.createElement("img");
+    img.src = tar.src;
+    img.setAttribute("label", tar.getAttribute("label"));
+    img.onload = () => {
+      document.body.appendChild(img);
+      draggedElement = img;
+    };
+  }
+});
 
-document.addEventListener(
-  "touchmove",
-  (e) => {
-    slideWindow(e.touches[0]);
-    if (!draggedElement) return;
+document.addEventListener("touchmove", (e) => {
+  slideWindow(e.touches[0]);
+  if (!draggedElement) return;
 
-    draggedElement.style.position = "absolute";
-    draggedElement.style.left = e.touches[0].clientX + "px";
-    draggedElement.style.top = e.touches[0].clientY + "px";
-  },
-  { passive: false }
-);
+  draggedElement.style.position = "absolute";
+  draggedElement.style.left = e.touches[0].clientX + "px";
+  draggedElement.style.top = e.touches[0].clientY + "px";
+});
 
 document.addEventListener("touchend", (e) => {
   dragging = false;
