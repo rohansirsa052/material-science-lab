@@ -1,6 +1,7 @@
 function VernierCaliper(canvas, ctx) {
   let assetPath = "assets/vc/";
   let itemsToLoad = 8;
+  var fgColor = "orange";
   let itemsLoaded = 0;
   let imgVernier = new Image();
   let imgVernier1 = new Image();

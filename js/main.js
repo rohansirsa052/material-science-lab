@@ -178,8 +178,6 @@ document.addEventListener("touchend", (e) => {
 document.addEventListener("dragstart", (event) => {
   // store a ref. on the dragged elem
   draggedElement = event.target;
-  e.preventDefault();
-  e.stopPropagation();
 });
 
 document.addEventListener("dragover", (event) => {
