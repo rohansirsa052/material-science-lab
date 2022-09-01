@@ -9,6 +9,7 @@ var ctx;
 
 var utm = null;
 var vc = null;
+var sample1 = null;
 
 var canvasWidth = main.offsetWidth - 20;
 var canvasHeight = main.offsetHeight - 20;
@@ -21,6 +22,8 @@ function init() {
   utm = UTM(canvas, ctx);
 
   vc = VernierCaliper(canvas, ctx);
+
+  sample1 = Sample1(canvas, ctx);
 
   //Add event listeners
   window.addEventListener("resize", resize);
@@ -61,6 +64,7 @@ function init() {
 
     if (vc) vc.paint();
     if (utm) utm.paint();
+    if (sample1) sample1.paint();
   };
 
   ctx.refresh();
@@ -77,16 +81,19 @@ function resize() {
 function onMouseDownHandler(event) {
   if (utm) utm.onMouseDownHandler(event);
   if (vc) vc.onMouseDownHandler(event);
+  if (sample1) sample1.onMouseDownHandler(event);
 }
 
 function onMouseMoveHandler(event) {
   if (utm) utm.onMouseMoveHandler(event);
   if (vc) vc.onMouseMoveHandler(event);
+  if (sample1) sample1.onMouseMoveHandler(event);
 }
 
 function onMouseUpHandler(event) {
   if (utm) utm.onMouseUpHandler(event);
   if (vc) vc.onMouseUpHandler(event);
+  if (sample1) sample1.onMouseUpHandler(event);
 }
 
 function onContextMenuHandler(event) {
@@ -95,6 +102,7 @@ function onContextMenuHandler(event) {
 
   if (utm) utm.onContextMenuHandler(event);
   if (vc) vc.onContextMenuHandler(event);
+  if (sample1) sample1.onContextMenuHandler(event);
 }
 
 function onClickHandler(event) {
@@ -103,6 +111,7 @@ function onClickHandler(event) {
 
   if (utm) utm.onClickHandler(event);
   if (vc) vc.onClickHandler(event);
+  if (sample1) sample1.onClickHandler(event);
 }
 
 function onMouseWheelHandler(event) {
@@ -111,6 +120,7 @@ function onMouseWheelHandler(event) {
 
   if (utm) utm.onMouseWheelHandler(event);
   if (vc) vc.onMouseWheelHandler(event);
+  if (sample1) sample1.onMouseWheelHandler(event);
 }
 
 function onElementDrop(event) {
@@ -122,6 +132,9 @@ function onElementDrop(event) {
       break;
     case "vernierCaliper":
       vc.init();
+      break;
+    case "sample1":
+      sample1.init();
       break;
   }
 }

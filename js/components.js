@@ -725,3 +725,242 @@ function UTM(canvas, ctx) {
     destory: destory,
   };
 }
+
+function Sample1(canvas, ctx) {
+  let assetPath = "assets/sample/";
+  let itemsToLoad = 1;
+  let itemsLoaded = 0;
+  let sample1 = new Image();
+  let xOffset = 40;
+  let yOffset = 120;
+  let yMovement = 0; /* 0 to 1 */
+  let dragMode = 0; /* 0 = no drag, 1 = drag machine, */
+  let isFixed = 0; /* 0=draggable; 1=not draggable */
+  let rotate = 0; /* 0=horizontal; 1=vertical */
+  let menuPinText = ["Pin", "Unpin"];
+  let menuPinIcon = [ContextMenu.pinIcon, ContextMenu.unpinIcon];
+  let menuRotateText = ["Rotate", "Rotate back"];
+  let menuRotateIcon = [ContextMenu.rotateRight, ContextMenu.rotateLeft];
+
+  let scale = 0.4;
+
+  let isActive = false;
+
+  sample1.src = assetPath + "sample1.png";
+  sample1.onload = itemsLoaded++;
+
+  var contextMenu;
+  var contextMenuInstance = null;
+
+  const init = () => {
+    isActive = true;
+    if (itemsLoaded >= itemsToLoad) {
+      ctx.refresh();
+    }
+
+    contextMenu = new ContextMenu();
+  };
+
+  const paint = () => {
+    if (!isActive) return;
+
+    ctx.save();
+
+    x = xOffset * scale;
+    y = yOffset * scale;
+
+    if (rotate) {
+      x = -x;
+      y = -y;
+      ctx.rotate((90 * Math.PI) / 180);
+    }
+
+    ctx.drawImage(sample1, x, y, sample1.width * scale, sample1.height * scale);
+    ctx.restore();
+  };
+
+  const start = (speed, direction) => {
+    // speed 0 to 1
+    // direction -1:down, 1: up
+
+    if (direction == -1) {
+      let ref = setInterval(() => {
+        step = speed * 0.05;
+        yMovement -= step;
+
+        if (yMovement <= 0) {
+          clearInterval(ref);
+          return;
+        }
+
+        ctx.refresh();
+      }, 100);
+    } else {
+      let ref = setInterval(() => {
+        step = speed * 0.05;
+        yMovement += step;
+
+        if (yMovement >= 1) {
+          clearInterval(ref);
+          return;
+        }
+
+        ctx.refresh();
+      }, 100);
+    }
+  };
+
+  const isInside = ({ x, y }) => {
+    if (rotate) {
+      boundary = {
+        ymin: (-xOffset + 10) * scale,
+        ymax: (-xOffset + 750) * scale,
+        xmin: (yOffset - 100) * scale,
+        xmax: (yOffset + 5) * scale,
+      };
+    } else {
+      boundary = {
+        xmin: (xOffset + 10) * scale,
+        xmax: (xOffset + 750) * scale,
+        ymin: yOffset * scale,
+        ymax: (yOffset + 100) * scale,
+      };
+    }
+
+    // ctx.fillRect(boundary.xmin, boundary.ymin, boundary.xmax - boundary.xmin, boundary.ymax - boundary.ymin);
+
+    if (x > boundary.xmin && x < boundary.xmax && y > boundary.ymin && y < boundary.ymax) {
+      return true;
+    }
+  };
+
+  const getMouseCoords = (event) => {
+    let rect = canvas.getBoundingClientRect();
+    let x = (event.clientX - rect.left) * devicePixelRatio;
+    let y = (event.clientY - rect.top) * devicePixelRatio;
+    return { x: x, y: y };
+  };
+
+  const onClickHandler = (event) => {
+    if (contextMenuInstance) {
+      contextMenu.closeMenu(contextMenuInstance);
+    }
+  };
+
+  const onMouseDownHandler = (event) => {
+    if (isFixed == 0 && isInside(getMouseCoords(event))) {
+      dragMode = 1;
+      return;
+    }
+  };
+
+  const onMouseUpHandler = (event) => {
+    dragMode = 0;
+  };
+
+  const onMouseMoveHandler = (event) => {
+    if (dragMode == 0) return;
+
+    let { x, y } = getMouseCoords(event);
+
+    if (dragMode == 1) {
+      if (rotate) {
+        xOffset = -(y - 20 * scale) / scale;
+        yOffset = (x + 50 * scale) / scale;
+      } else {
+        xOffset = (x - 100 * scale) / scale;
+        yOffset = (y + 10 * scale) / scale;
+      }
+      ctx.refresh();
+    }
+  };
+
+  const onMouseWheelHandler = (event) => {
+    if (isActive && isInside(getMouseCoords(event))) {
+      let { deltaY } = event;
+      if (deltaY > 0) {
+        // scale down the image
+        scale = Math.max(0.1, scale - 0.05);
+      } else {
+        // scale up (zoom)
+        scale = Math.min(2, scale + 0.05);
+      }
+      ctx.refresh();
+    }
+  };
+
+  const onContextMenuHandler = (event) => {
+    if (isActive && contextMenuInstance) {
+      contextMenu.closeMenu(contextMenuInstance);
+    }
+
+    if (isActive && isInside(getMouseCoords(event))) {
+      contextMenu.setMenuItems([
+        {
+          content: `${ContextMenu.deleteIcon}Delete`,
+          divider: "top", // top, bottom, top-bottom
+          events: {
+            click: destory,
+          },
+        },
+        {
+          content: `${menuPinIcon[isFixed]}${menuPinText[isFixed]}`,
+          divider: "top", // top, bottom, top-bottom
+          events: {
+            click: () => {
+              if (contextMenuInstance) {
+                contextMenu.closeMenu(contextMenuInstance);
+              }
+
+              // toggle
+              isFixed = isFixed ? 0 : 1;
+              ctx.refresh();
+            },
+          },
+        },
+        {
+          content: `${menuRotateIcon[rotate]}${menuRotateText[rotate]}`,
+          divider: "top", // top, bottom, top-bottom
+          events: {
+            click: () => {
+              if (contextMenuInstance) {
+                contextMenu.closeMenu(contextMenuInstance);
+              }
+
+              rotate = rotate == 0 ? 1 : 0;
+
+              xOffset = -rotate * 30 + 10;
+              yOffset = 120;
+
+              ctx.refresh();
+            },
+          },
+        },
+      ]);
+      contextMenuInstance = contextMenu.show(event);
+    }
+    return true;
+  };
+
+  const destory = () => {
+    if (contextMenuInstance) {
+      contextMenu.closeMenu(contextMenuInstance);
+    }
+
+    isActive = false;
+    ctx.refresh();
+  };
+
+  return {
+    init: init,
+    start: start,
+    onMouseDownHandler: onMouseDownHandler,
+    onMouseUpHandler: onMouseUpHandler,
+    onMouseMoveHandler: onMouseMoveHandler,
+    onContextMenuHandler: onContextMenuHandler,
+    onClickHandler: onClickHandler,
+    onMouseWheelHandler: onMouseWheelHandler,
+    paint: paint,
+    destory: destory,
+  };
+}
