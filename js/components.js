@@ -461,24 +461,26 @@ function VernierCaliper(canvas, ctx) {
 
 function UTM(canvas, ctx) {
   let assetPath = "assets/utm/";
-  let itemsToLoad = 4;
+  let itemsToLoad = 5;
   let itemsLoaded = 0;
   let imgUTM1 = new Image();
   let imgUTM2 = new Image();
   let imgUTMPiller1 = new Image();
   let imgUTMPiller2 = new Image();
+  let sample = new Image();
   let xOffset = 30;
   let yOffset = 120;
   let yMovement = 0; /* 0 to 1 */
   let dragMode = 0; /* 0 = no drag, 1 = drag machine, */
   let isFixed = 0; /* 0=draggable; 1=not draggable */
+  let sampleLoaded = false;
   let menuPinText = ["Pin", "Unpin"];
   let menuPinIcon = [ContextMenu.pinIcon, ContextMenu.unpinIcon];
 
   let scale = 0.5;
 
-  let startX = 0;
-  let startY = 0;
+  // let startX = 0;
+  // let startY = 0;
 
   let isActive = false;
 
@@ -492,6 +494,9 @@ function UTM(canvas, ctx) {
   imgUTMPiller1.onload = itemsLoaded++;
   imgUTMPiller2.src = assetPath + "utm3.png";
   imgUTMPiller2.onload = itemsLoaded++;
+
+  sample.src = assetPath + "sample1.png";
+  sample.onload = itemsLoaded++;
 
   var contextMenu;
   var contextMenuInstance = null;
@@ -527,6 +532,12 @@ function UTM(canvas, ctx) {
     // ctx.drawImage(imgUTM2, xOffset + 68, yOffset - shift, imgUTM2.width * scale, imgUTM2.height * scale);
 
     // ctx.drawImage(imgUTM1, xOffset, yOffset + 500, imgUTM1.width * scale, imgUTM1.height * scale);
+    if (sampleLoaded) {
+      x = (xOffset + 227) * scale;
+      y = (yOffset + 440) * scale;
+      ctx.drawImage(sample, x, y, (sample.width * scale) / 4, (sample.height * scale) / 4);
+      yMovement = 0.55;
+    }
 
     x = (xOffset + 105) * scale;
     y = (yOffset + 180) * scale;
@@ -674,7 +685,7 @@ function UTM(canvas, ctx) {
     }
 
     if (isActive && isInside(getMouseCoords(event))) {
-      contextMenu.setMenuItems([
+      let menuItems = [
         {
           content: `${ContextMenu.deleteIcon}Delete`,
           divider: "top", // top, bottom, top-bottom
@@ -697,7 +708,27 @@ function UTM(canvas, ctx) {
             },
           },
         },
-      ]);
+      ];
+
+      if (sampleLoaded) {
+        menuItems.push({
+          content: `${ContextMenu.deleteIcon}Unload Sample`,
+          divider: "top", // top, bottom, top-bottom
+          events: {
+            click: () => {
+              if (contextMenuInstance) {
+                contextMenu.closeMenu(contextMenuInstance);
+              }
+
+              sampleLoaded = false;
+              sample1.init();
+              ctx.refresh();
+            },
+          },
+        });
+      }
+
+      contextMenu.setMenuItems(menuItems);
       contextMenuInstance = contextMenu.show(event);
     }
     return true;
@@ -715,6 +746,11 @@ function UTM(canvas, ctx) {
   return {
     init: init,
     start: start,
+    isActive: () => isActive,
+    isInside: isInside,
+    loadSample1: () => {
+      sampleLoaded = true;
+    },
     onMouseDownHandler: onMouseDownHandler,
     onMouseUpHandler: onMouseUpHandler,
     onMouseMoveHandler: onMouseMoveHandler,
@@ -855,6 +891,12 @@ function Sample1(canvas, ctx) {
   };
 
   const onMouseUpHandler = (event) => {
+    if (dragMode == 1 && utm && utm.isActive() && utm.isInside(getMouseCoords(event))) {
+      utm.loadSample1();
+      destory();
+      ctx.refresh();
+    }
+
     dragMode = 0;
   };
 
