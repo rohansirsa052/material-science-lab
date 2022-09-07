@@ -448,6 +448,7 @@ function VernierCaliper(canvas, ctx) {
 
   return {
     init: init,
+    isActive: () => isActive,
     onMouseDownHandler: onMouseDownHandler,
     onMouseUpHandler: onMouseUpHandler,
     onMouseMoveHandler: onMouseMoveHandler,
@@ -996,6 +997,7 @@ function Sample1(canvas, ctx) {
   return {
     init: init,
     start: start,
+    isActive: () => isActive,
     onMouseDownHandler: onMouseDownHandler,
     onMouseUpHandler: onMouseUpHandler,
     onMouseMoveHandler: onMouseMoveHandler,

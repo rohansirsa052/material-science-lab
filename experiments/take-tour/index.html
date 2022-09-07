@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="http://localhost:81/" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Take Tour</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="menu">
+        <h2 class="text-center">Tools</h2>
+        <hr />
+        <div class="list text-center">
+          <div>
+            <img label="utmMachine" src="assets/img/utm-machine-logo.png" width="100" draggable="true" />
+            <p>UTM Machine</p>
+          </div>
+          <hr />
+          <div>
+            <img label="vernierCaliper" src="assets/img/venier-caliper-logo-sm.png" draggable="true" width="200" />
+            <p>Vernier Caliper</p>
+          </div>
+          <hr />
+          <div>
+            <img label="sample1" src="assets/img/sample1.png" draggable="true" width="200" />
+            <p>Test Sample</p>
+          </div>
+          <hr />
+        </div>
+      </div>
+      <div class="slider" id="slider"></div>
+      <div class="main">
+        <canvas class="dropzone" id="gui">Your browser does not support the HTML5 canvas tag.</canvas>
+      </div>
+    </div>
+
+    <script src="js/popover.js"></script>
+    <script src="js/context.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+      let popover = new Popover();
+
+      let steps = [
+        {
+          body: "Welcome! to the tour of lab. This step will guide you through the process of using this simulator with diffrent features. So let's get started.",
+          position: { top: "20px", left: "200px" },
+        },
+        {
+          body: "Universal Testing Machine (UTM), is used to measure the tensile strength of a material. It is a machine used to test the tensile strength of a material.",
+          position: { top: "100px", left: "200px" },
+        },
+        {
+          body: "Vernier Caliper, is used to measure the thickness/lenght of the sample.",
+          position: { top: "280px", left: "250px" },
+        },
+        {
+          body: "Steel Sample, is used to test the tensile strength of the material.",
+          position: { top: "380px", left: "250px" },
+        },
+        {
+          body: "Workspace - You can drag and drop any tools here",
+          position: { top: "300px", left: "600px" },
+        },
+        {
+          body: "Drag and drop the UTM machine from the left menu to the workspace.",
+          position: { top: "100px", left: "200px" },
+          callback: (i) => {
+            if (utm) {
+              if (!utm.isActive()) {
+                alert("Please drag the UTM machine to the workspace.");
+                performStep(i);
+                return false;
+              }
+              return true;
+            }
+          },
+        },
+        {
+          body: "You can drag this to change the location according to your need.",
+          position: { top: "200px", left: "480px" },
+        },
+        {
+          body: "You can resize this using your mouse wheel.",
+          position: { top: "200px", left: "480px" },
+        },
+        {
+          body: "You can pin the location of it. Press right click then select Pin/Unpin.",
+          position: { top: "200px", left: "480px" },
+        },
+        {
+          body: "You can remove it by right click and select delete.",
+          position: { top: "200px", left: "480px" },
+          callback: () => {
+            if (utm) utm.destory();
+            if (vc) vc.destory();
+            if (sample1) sample1.destory();
+            return true;
+          },
+        },
+        {
+          body: "Drag and drop the Vernier Caliper from the left menu to the workspace.",
+          position: { top: "280px", left: "250px" },
+          callback: (i) => {
+            if (vc) {
+              if (!vc.isActive()) {
+                alert("Please drag the Vernier Caliper to the workspace.");
+                performStep(i);
+                return false;
+              }
+              return true;
+            }
+          },
+        },
+        {
+          body: "You can slide the ruler to take measurement.",
+          position: { top: "120px", left: "400px" },
+        },
+        {
+          body: "Please pin the location of vernier caliper (Right Click >> Pin). So it will not move when you take the measurement.",
+          position: { top: "80px", left: "520px" },
+        },
+        {
+          body: "Drag and drop the sample from the left menu to the workspace.",
+          position: { top: "380px", left: "250px" },
+          callback: (i) => {
+            if (sample1) {
+              if (!sample1.isActive()) {
+                alert("Please drag the sample to the workspace.");
+                performStep(i);
+                return false;
+              }
+              return true;
+            }
+          },
+        },
+        {
+          body: "Place the sample near to vernier caliper and take length.",
+          position: { top: "170px", left: "800px" },
+        },
+        {
+          body: "Now rotate your sample (Right Click >> Rotate), to take width of the sample via vernier caliper.",
+          position: { top: "170px", left: "800px" },
+        },
+        {
+          body: "Congrats! You successfully completed the tour.",
+          position: { top: "300px", left: "600px" },
+        },
+      ];
+
+      function performStep(i) {
+        if (i >= steps.length) {
+          return;
+        }
+        step = steps[i];
+        popover.setBody(step.body);
+        popover.setPosition(step.position);
+
+        popover.onNext(() => {
+          popover.destroy();
+          if (step.callback) {
+            if (step.callback(i)) {
+              performStep(i + 1);
+            }
+          } else {
+            performStep(i + 1);
+          }
+        });
+
+        popover.show();
+      }
+
+      performStep(0);
+    </script>
+  </body>
+</html>
