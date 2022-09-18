@@ -55,9 +55,9 @@ function init() {
     canvas.style.height = canvasHeight + "px";
 
     // draw points
-    for (i = 0; i < canvas.width; i += 50) {
-      for (j = 0; j < canvas.height; j += 50) {
-        ctx.fillStyle = "rgb(160,160,160)";
+    ctx.fillStyle = "rgb(160,160,160)";
+    for (i = 10; i < canvas.width; i += 50) {
+      for (j = 10; j < canvas.height; j += 50) {
         ctx.fillRect(i, j, 3, 3);
       }
     }
@@ -208,3 +208,28 @@ function slideWindow(e) {
     ctx.refresh();
   }
 }
+
+window.refresh = () => {
+  document.querySelectorAll(".nav-item").forEach((item) => {
+    item.addEventListener("click", () => {
+      document.querySelectorAll(".nav-item").forEach((item) => item.classList.remove("active"));
+      item.classList.add("active");
+
+      document
+        .querySelectorAll(".nav-item")
+        .forEach((item) => document.querySelector(item.getAttribute("data-target")).classList.remove("active"));
+      document.querySelector(item.getAttribute("data-target")).classList.add("active");
+    });
+  });
+
+  document.querySelectorAll(".box:not(.disabled)").forEach((e) => {
+    e.addEventListener("click", () => {
+      document.querySelectorAll(".box").forEach((e) => {
+        e.classList.remove("active");
+      });
+      e.classList.toggle("active");
+    });
+  });
+};
+
+window.refresh();

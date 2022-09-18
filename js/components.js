@@ -1,6 +1,6 @@
 function VernierCaliper(canvas, ctx) {
   let assetPath = "assets/vc/";
-  let itemsToLoad = 8;
+  let itemsToLoad = 12;
   var fgColor = "orange";
   let itemsLoaded = 0;
   let imgVernier = new Image();
@@ -10,8 +10,12 @@ function VernierCaliper(canvas, ctx) {
   let imgBlade = new Image();
   let imgBase = new Image();
   let imgVlab = new Image();
-  let xOffset = 20;
-  let yOffset = 30;
+  let imgSampleH = new Image();
+  let imgSampleV = new Image();
+  let imgSampleCrackedH = new Image();
+  let imgSampleCrackedV = new Image();
+  let xOffset = 50;
+  let yOffset = 90;
   let scale = 0.5;
   let dragMode = 0; /* 0 = no drag, 1 = drag machine, */
   let isActive = false;
@@ -19,12 +23,12 @@ function VernierCaliper(canvas, ctx) {
   let menuPinText = ["Pin", "Unpin"];
   let menuPinIcon = [ContextMenu.pinIcon, ContextMenu.unpinIcon];
 
-  var msr = 0;
-  var vsr = 0;
-  var vernierScaleDivisions = 10;
+  // var msr = 0;
+  // var vsr = 0;
+  // var vernierScaleDivisions = 10;
   const mainScaleLengthPixels = 600; //600
-  var msd_pixels = mainScaleLengthPixels / mainScaleDivisions;
-  var mainScaleDivisions = 50;
+  // var msd_pixels = mainScaleLengthPixels / mainScaleDivisions;
+  // var mainScaleDivisions = 50;
   const rulerWidthPixel = 915;
   const bladeWidthPixel = 716;
   const scaleOriginY0 = 105; //scale top position
@@ -49,7 +53,7 @@ function VernierCaliper(canvas, ctx) {
 
   const unit = "cm";
   var mainScaleDivisions = 50;
-  var msdValue = 0.1;
+  var msdValue = 0.5;
   var vernierScaleDivisions = 10;
   var msd_pixels = mainScaleLengthPixels / mainScaleDivisions;
   var vsd_pixels = mainScaleLengthPixels / mainScaleDivisions;
@@ -85,6 +89,8 @@ function VernierCaliper(canvas, ctx) {
     state: 0,
   }; //state =0=hide, 1= visible but not snapped, 2=snapped
 
+  let sampleLoaded = 0; // 0=not loaded, 1=loaded horizontal, 2=loaded vertical
+
   var contextMenu;
   var contextMenuInstance;
 
@@ -112,11 +118,25 @@ function VernierCaliper(canvas, ctx) {
   imgVlab.src = assetPath + "vlab-logo-sm.png";
   imgVlab.onload = itemsLoaded++;
 
+  imgSampleH.src = assetPath + "sample1-h.png";
+  imgSampleH.onload = itemsLoaded++;
+
+  imgSampleV.src = assetPath + "sample1-v.png";
+  imgSampleV.onload = itemsLoaded++;
+
+  imgSampleCrackedH.src = assetPath + "sample1-cracked-h.png";
+  imgSampleCrackedH.onload = itemsLoaded++;
+
+  imgSampleCrackedV.src = assetPath + "sample1-cracked-v.png";
+  imgSampleCrackedV.onload = itemsLoaded++;
+
   var tickSound = new Audio(assetPath + "tick.wav");
   tickSound.onload = itemsLoaded++;
 
   const init = () => {
     isActive = true;
+    xOffset = 50;
+    yOffset = 90;
     if (itemsLoaded >= itemsToLoad) {
       ctx.refresh();
     }
@@ -126,17 +146,34 @@ function VernierCaliper(canvas, ctx) {
 
   const paint = () => {
     if (!isActive) return;
-    // canvas.width = window.innerWidth * devicePixelRatio;
-    // canvas.height = window.innerHeight * devicePixelRatio;
-    // canvas.style.width = window.innerWidth + "px";
-    // canvas.style.height = window.innerHeight + "px";
 
-    // ctx.fillStyle = "#ffffff";
-    // ctx.fillRect(0, 0, canvas.width * devicePixelRatio, canvas.height * devicePixelRatio);
-    // ctx.fillRect(xOffset , yOffset, 5, 5);
     ctx.translate(xOffset, yOffset);
     ctx.scale(scale * devicePixelRatio, scale * devicePixelRatio);
     ctx.save();
+
+    // draw sample
+    if (sampleLoaded == 1) {
+      let x = -15;
+      let y = 342;
+
+      let currentSample = imgSampleH;
+      if (utm && utm.getSampleState() == 2) {
+        currentSample = imgSampleCrackedH;
+      }
+
+      ctx.drawImage(currentSample, x, y, currentSample.width / 2, currentSample.height / 2);
+    } else if (sampleLoaded == 2) {
+      let x = 57;
+      let y = 160;
+
+      let currentSample = imgSampleV;
+      if (utm && utm.getSampleState() == 2) {
+        x = 55;
+        currentSample = imgSampleCrackedV;
+      }
+
+      ctx.drawImage(currentSample, x, y, currentSample.width / 1.1, currentSample.height / 1.1);
+    }
 
     //draw  blade first
     let shift = (msr + vsr / vernierScaleDivisions) * msd_pixels;
@@ -382,7 +419,7 @@ function VernierCaliper(canvas, ctx) {
     }
 
     if (isActive && isInside(getMouseCoords(event))) {
-      contextMenu.setMenuItems([
+      let menuItems = [
         {
           content: `${ContextMenu.deleteIcon}Delete`,
           divider: "top", // top, bottom, top-bottom
@@ -405,7 +442,27 @@ function VernierCaliper(canvas, ctx) {
             },
           },
         },
-      ]);
+      ];
+
+      if (sampleLoaded) {
+        menuItems.push({
+          content: `${ContextMenu.deleteIcon}Unload Sample`,
+          divider: "top", // top, bottom, top-bottom
+          events: {
+            click: () => {
+              if (contextMenuInstance) {
+                contextMenu.closeMenu(contextMenuInstance);
+              }
+
+              sampleLoaded = 0;
+              sample1.init();
+              ctx.refresh();
+            },
+          },
+        });
+      }
+
+      contextMenu.setMenuItems(menuItems);
       contextMenuInstance = contextMenu.show(event);
     }
     return true;
@@ -449,6 +506,10 @@ function VernierCaliper(canvas, ctx) {
   return {
     init: init,
     isActive: () => isActive,
+    isInside: isInside,
+    loadSample1: (val) => {
+      sampleLoaded = val;
+    },
     onMouseDownHandler: onMouseDownHandler,
     onMouseUpHandler: onMouseUpHandler,
     onMouseMoveHandler: onMouseMoveHandler,
@@ -462,21 +523,27 @@ function VernierCaliper(canvas, ctx) {
 
 function UTM(canvas, ctx) {
   let assetPath = "assets/utm/";
-  let itemsToLoad = 5;
+  let itemsToLoad = 7;
   let itemsLoaded = 0;
   let imgUTM1 = new Image();
   let imgUTM2 = new Image();
   let imgUTMPiller1 = new Image();
   let imgUTMPiller2 = new Image();
   let sample = new Image();
+  let sampleNecked = new Image();
+  let sampleCracked = new Image();
   let xOffset = 30;
-  let yOffset = 120;
+  let yOffset = 400;
   let yMovement = 0; /* 0 to 1 */
   let dragMode = 0; /* 0 = no drag, 1 = drag machine, */
   let isFixed = 0; /* 0=draggable; 1=not draggable */
   let sampleLoaded = false;
   let menuPinText = ["Pin", "Unpin"];
   let menuPinIcon = [ContextMenu.pinIcon, ContextMenu.unpinIcon];
+  let utmPlayRef = null;
+  let currentSampleState = 0; //0: no crack; 1: necked; 2:cracked
+  let currentDialReading = 0;
+  let currentLoad = 0;
 
   let scale = 0.5;
 
@@ -499,11 +566,20 @@ function UTM(canvas, ctx) {
   sample.src = assetPath + "sample1.png";
   sample.onload = itemsLoaded++;
 
+  sampleNecked.src = assetPath + "sample1-necked.png";
+  sampleNecked.onload = itemsLoaded++;
+
+  sampleCracked.src = assetPath + "sample1-cracked.png";
+  sampleCracked.onload = itemsLoaded++;
+
   var contextMenu;
   var contextMenuInstance = null;
 
   const init = () => {
     isActive = true;
+    xOffset = 30;
+    yOffset = 400;
+
     if (itemsLoaded >= itemsToLoad) {
       ctx.refresh();
     }
@@ -513,31 +589,24 @@ function UTM(canvas, ctx) {
 
   const paint = () => {
     if (!isActive) return;
-    // canvas.width = window.innerWidth * devicePixelRatio;
-    // canvas.height = window.innerHeight * devicePixelRatio;
-    // canvas.style.width = window.innerWidth + "px";
-    // canvas.style.height = window.innerHeight + "px";
 
-    // ctx.fillStyle = "#ffffff";
-    // ctx.fillRect(0, 0, canvas.width * devicePixelRatio, canvas.height * devicePixelRatio);
-
-    // ctx.scale(mScale * devicePixelRatio, mScale * devicePixelRatio);
-    // ctx.translate(xOffset, yOffset);
-    // ctx.save();
-
-    // ctx.drawImage(imgUTMPiller1, xOffset + 105, yOffset + 180, imgUTMPiller1.width * scale, imgUTMPiller1.height * scale);
-
-    // ctx.drawImage(imgUTMPiller2, xOffset + 295, yOffset + 180, imgUTMPiller2.width * scale, imgUTMPiller2.height * scale);
-
-    // let shift = yMovement * 90 - 120;
-    // ctx.drawImage(imgUTM2, xOffset + 68, yOffset - shift, imgUTM2.width * scale, imgUTM2.height * scale);
-
-    // ctx.drawImage(imgUTM1, xOffset, yOffset + 500, imgUTM1.width * scale, imgUTM1.height * scale);
     if (sampleLoaded) {
+      let currentSample = sample;
+      currentSampleState = 0;
+
+      if (yMovement > 0.9) {
+        currentSample = sampleCracked;
+        currentSampleState = 2;
+      } else if (yMovement > 0.7) {
+        currentSample = sampleNecked;
+        currentSampleState = 1;
+      }
+
       x = (xOffset + 227) * scale;
-      y = (yOffset + 440) * scale;
-      ctx.drawImage(sample, x, y, (sample.width * scale) / 4, (sample.height * scale) / 4);
-      yMovement = 0.55;
+
+      let yStart = (yOffset + 485 - yMovement * 90) * scale;
+      let yEnd = (50 + yMovement * 90) * scale;
+      ctx.drawImage(currentSample, x, yStart, (sample.width * scale) / 4, yEnd);
     }
 
     x = (xOffset + 105) * scale;
@@ -564,29 +633,39 @@ function UTM(canvas, ctx) {
     // direction -1:down, 1: up
 
     if (direction == -1) {
-      let ref = setInterval(() => {
+      utmPlayRef = setInterval(() => {
         step = speed * 0.05;
         yMovement -= step;
 
         if (yMovement <= 0) {
-          clearInterval(ref);
+          clearInterval(utmPlayRef);
           return;
         }
 
         ctx.refresh();
       }, 100);
     } else {
-      let ref = setInterval(() => {
+      utmPlayRef = setInterval(() => {
         step = speed * 0.05;
         yMovement += step;
+        currentLoad += 0.5;
+        currentDialReading = currentLoad * Math.round(5 * yMovement);
 
         if (yMovement >= 1) {
-          clearInterval(ref);
+          clearInterval(utmPlayRef);
+          utmPlayRef = null;
           return;
         }
 
         ctx.refresh();
       }, 100);
+    }
+  };
+
+  const stop = () => {
+    if (utmPlayRef) {
+      clearInterval(utmPlayRef);
+      utmPlayRef = null;
     }
   };
 
@@ -721,7 +800,7 @@ function UTM(canvas, ctx) {
                 contextMenu.closeMenu(contextMenuInstance);
               }
 
-              sampleLoaded = false;
+              sampleLoaded = 0;
               sample1.init();
               ctx.refresh();
             },
@@ -747,11 +826,18 @@ function UTM(canvas, ctx) {
   return {
     init: init,
     start: start,
+    stop: stop,
     isActive: () => isActive,
     isInside: isInside,
+    isRunning: () => (utmPlayRef ? true : false),
     loadSample1: () => {
       sampleLoaded = true;
+      yMovement = 0.55;
     },
+    getLoad: () => currentLoad,
+    getDialReading: () => currentDialReading,
+    isSampleLoaded: () => sampleLoaded,
+    getSampleState: () => currentSampleState,
     onMouseDownHandler: onMouseDownHandler,
     onMouseUpHandler: onMouseUpHandler,
     onMouseMoveHandler: onMouseMoveHandler,
@@ -765,9 +851,11 @@ function UTM(canvas, ctx) {
 
 function Sample1(canvas, ctx) {
   let assetPath = "assets/sample/";
-  let itemsToLoad = 1;
+  let itemsToLoad = 3;
   let itemsLoaded = 0;
   let sample1 = new Image();
+  let sample1Cracked = new Image();
+  let sample1Necked = new Image();
   let xOffset = 40;
   let yOffset = 120;
   let yMovement = 0; /* 0 to 1 */
@@ -785,12 +873,19 @@ function Sample1(canvas, ctx) {
 
   sample1.src = assetPath + "sample1.png";
   sample1.onload = itemsLoaded++;
+  sample1Necked.src = assetPath + "sample1-necked.png";
+  sample1Necked.onload = itemsLoaded++;
+  sample1Cracked.src = assetPath + "sample1-cracked.png";
+  sample1Cracked.onload = itemsLoaded++;
 
   var contextMenu;
   var contextMenuInstance = null;
 
   const init = () => {
     isActive = true;
+    xOffset = 40;
+    yOffset = 120;
+
     if (itemsLoaded >= itemsToLoad) {
       ctx.refresh();
     }
@@ -812,7 +907,16 @@ function Sample1(canvas, ctx) {
       ctx.rotate((90 * Math.PI) / 180);
     }
 
-    ctx.drawImage(sample1, x, y, sample1.width * scale, sample1.height * scale);
+    let currentSample = sample1;
+    if (utm) {
+      if (utm.getSampleState() == 1) {
+        currentSample = sample1Necked;
+      } else if (utm.getSampleState() == 2) {
+        currentSample = sample1Cracked;
+      }
+    }
+
+    ctx.drawImage(currentSample, x, y, sample1.width * scale, sample1.height * scale);
     ctx.restore();
   };
 
@@ -892,9 +996,14 @@ function Sample1(canvas, ctx) {
   };
 
   const onMouseUpHandler = (event) => {
-    if (dragMode == 1 && utm && utm.isActive() && utm.isInside(getMouseCoords(event))) {
-      utm.loadSample1();
-      destory();
+    if (dragMode == 1) {
+      if (utm && utm.isActive() && utm.isInside(getMouseCoords(event))) {
+        utm.loadSample1();
+        destory();
+      } else if (vc && vc.isActive() && vc.isInside(getMouseCoords(event))) {
+        vc.loadSample1(rotate + 1);
+        destory();
+      }
       ctx.refresh();
     }
 
