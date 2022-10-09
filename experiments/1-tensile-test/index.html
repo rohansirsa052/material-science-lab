@@ -50,7 +50,7 @@
                     <li>Place the sample on the venier caliper.</li>
                     <li>Take the length and enter it below:</li>
                   </ul>
-                  <div class="mt-1">Length: <input id="step1Length" type="number" /> cm</div>
+                  <div class="mt-1">Length: <input id="step1Length" type="number" /> mm</div>
                 </div>
               </div>
 
@@ -64,7 +64,7 @@
                     <li>Take the diameter and enter it below:</li>
                   </ul>
 
-                  <div class="mt-1">Diameter: <input id="step2Dia" type="number" /> cm</div>
+                  <div class="mt-1">Diameter: <input id="step2Dia" type="number" /> mm</div>
                 </div>
               </div>
 
@@ -90,7 +90,13 @@
                   <div class="mt-1">
                     <button id="startTest">Start Test</button>
                   </div>
-                  <div class="mt-1">
+
+                  <canvas id="outputGraphA"></canvas>
+
+
+                  <canvas id="outputGraphB"></canvas>
+
+                  <div class="mt-1 dataTable">
                     <table>
                       <thead>
                         <tr>
@@ -110,22 +116,9 @@
                 </div>
               </div>
 
+
               <div id="step5" class="box disabled">
-                <div class="label">Step 5: Graph.</div>
-                <div class="content">
-                  <canvas id="outputGraphA"></canvas>
-                </div>
-              </div>
-
-              <div id="step6" class="box disabled">
-                <div class="label">Step 6: Graph.</div>
-                <div class="content">
-                  <canvas id="outputGraphB"></canvas>
-                </div>
-              </div>
-
-              <div id="step7" class="box disabled">
-                <div class="label">Step 7: Measure final lenght.</div>
+                <div class="label">Step 5: Measure final lenght.</div>
                 <div class="content">
                   <ul>
                     <li>Unload the sample from UTM.</li>
@@ -136,12 +129,12 @@
                     <li>Take the length of the sample and enter it below.</li>
                   </ul>
 
-                  <div class="mt-1">Length: <input id="step7Length" type="number" /> cm</div>
+                  <div class="mt-1">Length: <input id="step5Length" type="number" /> mm</div>
                 </div>
               </div>
 
-              <div id="step8" class="box disabled">
-                <div class="label">Step 8: Measure final diameter</div>
+              <div id="step6" class="box disabled">
+                <div class="label">Step 6: Measure final diameter</div>
                 <div class="content">
                   <ul>
                     <li>Right click on venier caliper and click on unload sample.</li>
@@ -150,12 +143,12 @@
                     <li>Take the diameter and enter it below:</li>
                   </ul>
 
-                  <div class="mt-1">Diameter: <input id="step8Dia" type="number" /> cm</div>
+                  <div class="mt-1">Diameter: <input id="step6Dia" type="number" /> mm</div>
                 </div>
               </div>
 
-              <div id="step9" class="box disabled">
-                <div class="label">Step 9: Results</div>
+              <div id="step7" class="box disabled">
+                <div class="label">Step 7: Results</div>
                 <div class="content"></div>
               </div>
             </div>

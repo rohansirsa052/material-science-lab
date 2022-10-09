@@ -1,3 +1,4 @@
+const charts = {};
 const schema = ["loadKN", "extensometerA", "extensometerB", "average", "ivoryScale"];
 const readingData = [
   [0, 0, 0, 0, 0],
@@ -30,6 +31,13 @@ const readingData = [
   [50, 0, 0, 0, 38],
   [48, 0, 0, 0, 44],
 ];
+
+const ivoryReadings = [0, 0.5, 1, 1.5, 2, 2.5, 4, 5, 6, 7.2, 9, 10.5, 12, 16, 18, 22, 28, 34, 38, 44];
+const loadKN1 = [0, 5, 13.75, 22.5, 30, 35, 38, 36, 35, 40, 42.5, 45, 47.5, 50, 52.5, 55, 57, 52.5, 50, 48];
+
+const extensometerReading = [0, 1, 2.5, 3, 4, 5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 14, 15.5, 16.5];
+const loadKN2 = [0, 2.5, 5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30, 32.5, 36, 38];
+
 var currPos = 0;
 
 var currentStepProgress = 1;
@@ -54,8 +62,8 @@ function handleStep1() {
     return;
   }
 
-  if (len < 8 || len > 10) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 8 to 10)");
+  if (len < 35 || len > 40) {
+    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 35 to 40 mm)");
     return;
   }
 
@@ -79,8 +87,8 @@ function handleStep2() {
     return;
   }
 
-  if (len < 0.5 || len > 1.5) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 0.5 to 1.5)");
+  if (len < 3 || len > 4) {
+    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 3 to 4 mm)");
     return;
   }
 
@@ -108,6 +116,39 @@ function handleStep3() {
     alert("Please load the sample on the UTM machine first!");
     return;
   }
+
+  //plot blank graph
+  plotGraph(
+    document.getElementById("outputGraphA").getContext("2d"),
+    {
+      labels: ivoryReadings,
+      datasets: [
+        {
+          data: [],
+          borderColor: "#3e95cd",
+          fill: false,
+        },
+      ],
+    },
+    "Actuator Reading in mm",
+    "Load in kN"
+  );
+
+  plotGraph(
+    document.getElementById("outputGraphB").getContext("2d"),
+    {
+      labels: extensometerReading,
+      datasets: [
+        {
+          data: [],
+          borderColor: "#3e95cd",
+          fill: false,
+        },
+      ],
+    },
+    "Extensometer Reading in div",
+    "Load in kN"
+  );
 
   document.getElementById("btnNext").disabled = true;
 
@@ -140,6 +181,41 @@ function handleStep3() {
           </tr>
         `;
       currPos++;
+
+      let progress1 = (loadKN1.length / readingData.length) * currPos;
+      plotGraph(
+        document.getElementById("outputGraphA").getContext("2d"),
+        {
+          labels: ivoryReadings,
+          datasets: [
+            {
+              data: loadKN1.slice(0, progress1),
+              borderColor: "#3e95cd",
+              fill: false,
+            },
+          ],
+        },
+        "Ivory Scale Reading in mm",
+        "Load in kN"
+      );
+
+      let progress2 = (loadKN2.length / readingData.length) * currPos;
+
+      plotGraph(
+        document.getElementById("outputGraphB").getContext("2d"),
+        {
+          labels: extensometerReading,
+          datasets: [
+            {
+              data: loadKN2.slice(0, progress2),
+              borderColor: "#3e95cd",
+              fill: false,
+            },
+          ],
+        },
+        "Extensometer Reading in div",
+        "Load in kN"
+      );
     }, 650);
   });
 
@@ -159,27 +235,6 @@ function handleStep4() {
   pane.classList.add("done");
   pane.classList.remove("active");
 
-  let graphArea = document.getElementById("outputGraphA");
-
-  let ivoryReadings = [0, 0.5, 1, 1.5, 2, 2.5, 4, 5, 6, 7.2, 9, 10.5, 12, 16, 18, 22, 28, 34, 38, 44];
-  let loadKN = [0, 5, 13.75, 22.5, 30, 35, 38, 36, 35, 40, 42.5, 45, 47.5, 50, 52.5, 55, 57, 52.5, 50, 48];
-
-  plotGraph(
-    graphArea,
-    {
-      labels: ivoryReadings,
-      datasets: [
-        {
-          data: loadKN,
-          borderColor: "#3e95cd",
-          fill: false,
-        },
-      ],
-    },
-    "Ivory Scale Reading in mm",
-    "Load in kN"
-  );
-
   let next = document.getElementById("step5");
   next.classList.add("active");
   next.classList.remove("disabled");
@@ -189,61 +244,14 @@ function handleStep4() {
 
 function handleStep5() {
   let pane = document.getElementById("step5");
-
-  pane.classList.add("done");
-  pane.classList.remove("active");
-
-  let next = document.getElementById("step6");
-  next.classList.add("active");
-  next.classList.remove("disabled");
-
-  let graphAreaB = document.getElementById("outputGraphB");
-
-  let loadKN = [0, 2.5, 5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30, 32.5, 36, 38];
-  let extensometerReading = [0, 1, 2.5, 3, 4, 5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 14, 15.5, 16.5];
-
-  plotGraph(
-    graphAreaB,
-    {
-      labels: extensometerReading,
-      datasets: [
-        {
-          data: loadKN,
-          borderColor: "#3e95cd",
-          fill: false,
-        },
-      ],
-    },
-    "Extensometer Reading in div",
-    "Load in kN"
-  );
-
-  currentStepProgress = 6;
-}
-
-function handleStep6() {
-  let pane = document.getElementById("step6");
-
-  pane.classList.add("done");
-  pane.classList.remove("active");
-
-  let next = document.getElementById("step7");
-  next.classList.add("active");
-  next.classList.remove("disabled");
-
-  currentStepProgress = 7;
-}
-
-function handleStep7() {
-  let pane = document.getElementById("step7");
-  let len = document.getElementById("step7Length").value;
+  let len = document.getElementById("step5Length").value;
   if (!len) {
-    alert("Please enter the length in step 7.");
+    alert("Please enter the length in step 5.");
     return;
   }
 
-  if (len < 8.5 || len > 11) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 8.5 to 11)");
+  if (len < 38 || len > 40) {
+    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 38 to 40mm)");
     return;
   }
 
@@ -252,24 +260,24 @@ function handleStep7() {
   pane.classList.add("done");
   pane.classList.remove("active");
 
-  let next = document.getElementById("step8");
+  let next = document.getElementById("step6");
   next.classList.add("active");
   next.classList.remove("disabled");
 
-  currentStepProgress = 8;
+  currentStepProgress = 6;
 }
 
-function handleStep8() {
-  let pane = document.getElementById("step8");
-  let len = document.getElementById("step8Dia").value;
+function handleStep6() {
+  let pane = document.getElementById("step6");
+  let len = document.getElementById("step6Dia").value;
 
   if (!len) {
-    alert("Please enter the diameter in step 8.");
+    alert("Please enter the diameter in step 6.");
     return;
   }
 
-  if (len < 0.4 || len > 1.5) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 0.5 to 1.5)");
+  if (len < 3 || len > 5) {
+    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 3 to 5mm)");
     return;
   }
 
@@ -278,63 +286,83 @@ function handleStep8() {
   pane.classList.add("done");
   pane.classList.remove("active");
 
-  let next = document.getElementById("step9");
+  let next = document.getElementById("step7");
   next.classList.add("active");
   next.classList.remove("disabled");
 
   //last
   document.getElementById("btnNext").disabled = true;
-  document.querySelector("#step9 .content").innerHTML = `
+  document.querySelector("#step7 .content").innerHTML = `
     <table>
       <tr>
         <td>Initial Length</td>
-        <td>${sampleLength * 10} mm</td>
+        <td>${sampleLength} mm</td>
       </tr>
       <tr>
         <td>Initial Diameter</td>
-        <td>${sampleDiameter * 10} mm</td>
+        <td>${sampleDiameter} mm</td>
       </tr>
       <tr>
         <td>Final Length</td>
-        <td>${sampleFinalLength * 10} mm</td>
+        <td>${sampleFinalLength} mm</td>
       </tr>
       <tr>
         <td>Final Diameter</td>
-        <td>${sampleFinalDiameter * 10} mm</td>
+        <td>${sampleFinalDiameter} mm</td>
       </tr>
     </table>
   `;
 }
 
-function plotGraph(element, data, labelX, labelY) {
-  const graphCtx = element.getContext("2d");
-  const myChart = new Chart(graphCtx, {
-    type: "line",
-    data: data,
-    options: {
-      responsive: true,
-      legend: { display: false },
-      scales: {
-        xAxes: [
-          {
-            display: true,
-            scaleLabel: {
+function plotGraph(graphCtx, data, labelX, labelY) {
+  let chartObj = charts[graphCtx.canvas.id];
+  if (chartObj) {
+    chartObj.config.data.labels = data.labels;
+    chartObj.config.data.datasets = data.datasets;
+    chartObj.update();
+  } else {
+    charts[graphCtx.canvas.id] = new Chart(graphCtx, {
+      type: "line",
+      data: data,
+      options: {
+        responsive: true,
+        animation: false,
+        scaleOverride: true,
+        legend: { display: false },
+        scales: {
+          xAxes: [
+            {
               display: true,
-              labelString: labelX,
+              scaleLabel: {
+                display: true,
+                labelString: labelX,
+              },
+              ticks: {
+                beginAtZero: true,
+                steps: 10,
+                stepValue: 5,
+                max: Math.max(...ivoryReadings),
+              },
+              stacked: true,
             },
-            stacked: true,
-          },
-        ],
-        yAxes: [
-          {
-            display: true,
-            scaleLabel: {
+          ],
+          yAxes: [
+            {
               display: true,
-              labelString: labelY,
+              scaleLabel: {
+                display: true,
+                labelString: labelY,
+              },
+              ticks: {
+                beginAtZero: true,
+                steps: 10,
+                stepValue: 5,
+                max: Math.max(...loadKN1),
+              },
             },
-          },
-        ],
+          ],
+        },
       },
-    },
-  });
+    });
+  }
 }

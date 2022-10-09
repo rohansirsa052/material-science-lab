@@ -51,10 +51,10 @@ function VernierCaliper(canvas, ctx) {
   const vernierScaleHeightPixels = 354;
   const rulerMidPointY = 135;
 
-  const unit = "cm";
-  var mainScaleDivisions = 50;
-  var msdValue = 0.5;
-  var vernierScaleDivisions = 10;
+  const unit = "mm";
+  var mainScaleDivisions = 100;
+  var msdValue = 1;
+  var vernierScaleDivisions = 20;
   var msd_pixels = mainScaleLengthPixels / mainScaleDivisions;
   var vsd_pixels = mainScaleLengthPixels / mainScaleDivisions;
   // var vernierScaleLengthPixels = 180;
