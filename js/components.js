@@ -1,5 +1,9 @@
 function VernierCaliper(canvas, ctx) {
   let assetPath = "assets/vc/";
+  let sampleAssetPath = "assets/vc/";
+  if(typeof SAMPLE_ASSETS_PATH !== 'undefined'){
+    sampleAssetPath = SAMPLE_ASSETS_PATH;
+  }
   let itemsToLoad = 12;
   var fgColor = "orange";
   let itemsLoaded = 0;
@@ -118,16 +122,16 @@ function VernierCaliper(canvas, ctx) {
   imgVlab.src = assetPath + "vlab-logo-sm.png";
   imgVlab.onload = itemsLoaded++;
 
-  imgSampleH.src = assetPath + "sample1-h.png";
+  imgSampleH.src = sampleAssetPath + "sample1-h.png";
   imgSampleH.onload = itemsLoaded++;
 
-  imgSampleV.src = assetPath + "sample1-v.png";
+  imgSampleV.src = sampleAssetPath + "sample1-v.png";
   imgSampleV.onload = itemsLoaded++;
 
-  imgSampleCrackedH.src = assetPath + "sample1-cracked-h.png";
+  imgSampleCrackedH.src = sampleAssetPath + "sample1-cracked-h.png";
   imgSampleCrackedH.onload = itemsLoaded++;
 
-  imgSampleCrackedV.src = assetPath + "sample1-cracked-v.png";
+  imgSampleCrackedV.src = sampleAssetPath + "sample1-cracked-v.png";
   imgSampleCrackedV.onload = itemsLoaded++;
 
   var tickSound = new Audio(assetPath + "tick.wav");
@@ -544,6 +548,11 @@ function UTM(canvas, ctx) {
   let currentSampleState = 0; //0: no crack; 1: necked; 2:cracked
   let currentDialReading = 0;
   let currentLoad = 0;
+  let config = {
+    'yield_point': 0.7,
+    'breaking_point': 0.9,
+    'finish_point': 1
+  }
 
   let scale = 0.5;
 
@@ -594,10 +603,10 @@ function UTM(canvas, ctx) {
       let currentSample = sample;
       currentSampleState = 0;
 
-      if (yMovement > 0.9) {
+      if (yMovement > config.breaking_point) {
         currentSample = sampleCracked;
         currentSampleState = 2;
-      } else if (yMovement > 0.7) {
+      } else if (yMovement > config.yield_point) {
         currentSample = sampleNecked;
         currentSampleState = 1;
       }
@@ -651,7 +660,7 @@ function UTM(canvas, ctx) {
         currentLoad += 0.5;
         currentDialReading = currentLoad * Math.round(5 * yMovement);
 
-        if (yMovement >= 1) {
+        if (yMovement >= config.finish_point) {
           clearInterval(utmPlayRef);
           utmPlayRef = null;
           return;
@@ -829,6 +838,9 @@ function UTM(canvas, ctx) {
     stop: stop,
     isActive: () => isActive,
     isInside: isInside,
+    setConfig: (conf) => {
+      config = conf;
+    },
     isRunning: () => (utmPlayRef ? true : false),
     loadSample1: () => {
       sampleLoaded = true;
@@ -851,6 +863,10 @@ function UTM(canvas, ctx) {
 
 function Sample1(canvas, ctx) {
   let assetPath = "assets/sample/";
+  if(typeof SAMPLE_ASSETS_PATH !== 'undefined'){
+    assetPath = SAMPLE_ASSETS_PATH;
+  }
+
   let itemsToLoad = 3;
   let itemsLoaded = 0;
   let sample1 = new Image();
@@ -1107,6 +1123,9 @@ function Sample1(canvas, ctx) {
     init: init,
     start: start,
     isActive: () => isActive,
+    setAssetsPath: (path) => {
+      assetPath = path;
+    },
     onMouseDownHandler: onMouseDownHandler,
     onMouseUpHandler: onMouseUpHandler,
     onMouseMoveHandler: onMouseMoveHandler,

@@ -1,42 +1,43 @@
 const charts = {};
-const schema = ["loadKN", "extensometerA", "extensometerB", "average", "ivoryScale"];
+const schema = ["loadKN", "dialReading"];
 const readingData = [
-  [0, 0, 0, 0, 0],
-  [2.5, 1, 2, 1.5, 0.5],
-  [5, 2, 3, 2.5, 0.5],
-  [7.5, 3, 4, 3.5, 0.5],
-  [10, 4, 5, 4.5, 1],
-  [12.5, 5, 6, 5.5, 1],
-  [15, 7, 7, 7, 1],
-  [17.5, 9, 7, 8, 1],
-  [20, 10, 8, 9, 1.5],
-  [22.5, 11, 10, 10.5, 1.5],
-  [25, 12, 11, 11.5, 1.5],
-  [27.5, 13, 12, 12.5, 2],
-  [30, 14, 14, 14, 2],
-  [32.5, 15, 15, 15, 2],
-  [35, 16, 16, 16, 2.5],
-  [38, 0, 0, 0, 4],
-  [36, 0, 0, 0, 5],
-  [35, 0, 0, 0, 6],
-  [40, 0, 0, 0, 7.2],
-  [42.5, 0, 0, 0, 9],
-  [45, 0, 0, 0, 10.5],
-  [47.5, 0, 0, 0, 12],
-  [50, 0, 0, 0, 16],
-  [52.5, 0, 0, 0, 18],
-  [55, 0, 0, 0, 22],
-  [57, 0, 0, 0, 28],
-  [52.5, 0, 0, 0, 34],
-  [50, 0, 0, 0, 38],
-  [48, 0, 0, 0, 44],
+  [0, 0],
+  [2.5, 6],
+  [5, 14],
+  [7.5, 20],
+  [10, 29],
+  [12.5, 35],
+  [15, 43],
+  [17.5, 52],
+  [20, 60],
+  [22.5, 68],
+  [25, 78],
+  [27.5, 85],
+  [30, 94],
+  [32.5, 102],
+  [35, 112],
+  [37.5, 122],
+  [40, 132],
+  [42.5, 140],
+  [45, 150],
+  [47.5, 161],
+  [50, 174],
+  [52.5, 186],
+  [55, 198],
+  [57.5, 212],
+  [60, 230],
+  [62.5, 244],
+  [65, 262],
+  [67.5, 286],
+  [70, 324],
+  [72.5, 367],
+  [75, 405],
 ];
 
-const ivoryReadings = [0, 0.5, 1, 1.5, 2, 2.5, 4, 5, 6, 7.2, 9, 10.5, 12, 16, 18, 22, 28, 34, 38, 44];
-const loadKN1 = [0, 5, 13.75, 22.5, 30, 35, 38, 36, 35, 40, 42.5, 45, 47.5, 50, 52.5, 55, 57, 52.5, 50, 48];
-
-const extensometerReading = [0, 1, 2.5, 3, 4, 5, 6.5, 7.5, 8.5, 9.5, 10.5, 11.5, 12.5, 14, 15.5, 16.5];
-const loadKN2 = [0, 2.5, 5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30, 32.5, 36, 38];
+// x axis 
+const dialReading = [0, 6, 12, 16, 22, 28, 34, 40, 47, 52, 58, 65, 73, 80, 87, 94, 102, 110, 118, 126, 135, 144, 155, 165, 176, 189, 201, 216, 232, 248, 268, 284];
+// y axis
+const loadKN = [0, 2.5, 5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40, 42.5, 45, 46.5, 48, 49.5, 52.1, 53.5, 54, 55, 56.8, 57.5, 60, 62, 64.2, 65.5];
 
 var currPos = 0;
 
@@ -121,7 +122,7 @@ function handleStep3() {
   plotGraph(
     document.getElementById("outputGraphA").getContext("2d"),
     {
-      labels: ivoryReadings,
+      labels: dialReading,
       datasets: [
         {
           data: [],
@@ -130,23 +131,7 @@ function handleStep3() {
         },
       ],
     },
-    "Actuator Reading in mm",
-    "Load in kN"
-  );
-
-  plotGraph(
-    document.getElementById("outputGraphB").getContext("2d"),
-    {
-      labels: extensometerReading,
-      datasets: [
-        {
-          data: [],
-          borderColor: "#3e95cd",
-          fill: false,
-        },
-      ],
-    },
-    "Extensometer Reading in div",
+    "Dial Reading in mm",
     "Load in kN"
   );
 
@@ -157,9 +142,16 @@ function handleStep3() {
     e.currentTarget.disabled = true;
     document.getElementById("btnNext").disabled = true;
     e.currentTarget.innerHTML = "Running...";
+
+    utm.setConfig({
+      yield_point: 10, // no yield point
+      breaking_point: 0.65,
+      finish_point: 0.7,
+    });
+
     setTimeout(() => {
-      utm.start(0.05, 1);
-    }, 1000);
+      utm.start(0.015, 1);
+    }, 4000);
 
     let intr = setInterval(() => {
       if (currPos >= readingData.length) {
@@ -175,48 +167,27 @@ function handleStep3() {
           <tr>
             <td>${readingData[currPos][0]}</td>
             <td>${readingData[currPos][1]}</td>
-            <td>${readingData[currPos][2]}</td>
-            <td>${readingData[currPos][3]}</td>
-            <td>${readingData[currPos][4]}</td>
           </tr>
         `;
       currPos++;
 
-      let progress1 = (loadKN1.length / readingData.length) * currPos;
+      let progress1 = (loadKN.length / readingData.length) * currPos;
       plotGraph(
         document.getElementById("outputGraphA").getContext("2d"),
         {
-          labels: ivoryReadings,
+          labels: dialReading,
           datasets: [
             {
-              data: loadKN1.slice(0, progress1),
+              data: loadKN.slice(0, progress1),
               borderColor: "#3e95cd",
               fill: false,
             },
           ],
         },
-        "Ivory Scale Reading in mm",
+        "Dial Reading in mm",
         "Load in kN"
       );
-
-      let progress2 = (loadKN2.length / readingData.length) * currPos;
-
-      plotGraph(
-        document.getElementById("outputGraphB").getContext("2d"),
-        {
-          labels: extensometerReading,
-          datasets: [
-            {
-              data: loadKN2.slice(0, progress2),
-              borderColor: "#3e95cd",
-              fill: false,
-            },
-          ],
-        },
-        "Extensometer Reading in div",
-        "Load in kN"
-      );
-    }, 650);
+    }, 600);
   });
 
   pane.classList.add("done");
@@ -244,18 +215,6 @@ function handleStep4() {
 
 function handleStep5() {
   let pane = document.getElementById("step5");
-  let len = document.getElementById("step5Length").value;
-  if (!len) {
-    alert("Please enter the length in step 5.");
-    return;
-  }
-
-  if (len < 38 || len > 40) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 38 to 40mm)");
-    return;
-  }
-
-  sampleFinalLength = len;
 
   pane.classList.add("done");
   pane.classList.remove("active");
@@ -269,19 +228,6 @@ function handleStep5() {
 
 function handleStep6() {
   let pane = document.getElementById("step6");
-  let len = document.getElementById("step6Dia").value;
-
-  if (!len) {
-    alert("Please enter the diameter in step 6.");
-    return;
-  }
-
-  if (len < 3 || len > 5) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 3 to 5mm)");
-    return;
-  }
-
-  sampleFinalDiameter = len;
 
   pane.classList.add("done");
   pane.classList.remove("active");
@@ -304,11 +250,11 @@ function handleStep6() {
       </tr>
       <tr>
         <td>Final Length</td>
-        <td>${sampleFinalLength} mm</td>
+        <td>~${sampleLength} mm</td>
       </tr>
       <tr>
         <td>Final Diameter</td>
-        <td>${sampleFinalDiameter} mm</td>
+        <td>~${sampleDiameter} mm</td>
       </tr>
     </table>
   `;
@@ -339,11 +285,11 @@ function plotGraph(graphCtx, data, labelX, labelY) {
               },
               ticks: {
                 beginAtZero: true,
-                steps: 10,
-                stepValue: 5,
-                max: Math.max(...ivoryReadings),
+                steps: 20,
+                stepValue: 10,
+                max: Math.max(...dialReading),
               },
-              stacked: true,
+              // stacked: true,
             },
           ],
           yAxes: [
@@ -357,7 +303,7 @@ function plotGraph(graphCtx, data, labelX, labelY) {
                 beginAtZero: true,
                 steps: 10,
                 stepValue: 5,
-                max: Math.max(...loadKN1),
+                max: Math.max(...loadKN),
               },
             },
           ],
