@@ -60,9 +60,9 @@ function VernierCaliper(canvas, ctx) {
   var msdValue = 1;
   var vernierScaleDivisions = 20;
   var msd_pixels = mainScaleLengthPixels / mainScaleDivisions;
-  var vsd_pixels = mainScaleLengthPixels / mainScaleDivisions;
-  // var vernierScaleLengthPixels = 180;
-  var vernierScaleLengthPixels = 220;
+  var vsd_pixels = 5
+  let vsdValue = 1/2;
+  var vernierScaleLengthPixels = 200;
 
   var precision = 2;
   // var LC = 0;
@@ -253,7 +253,7 @@ function VernierCaliper(canvas, ctx) {
       ticklength = vernierMinorTickLengthPixels;
       if (i % labelGap == 0) {
         ticklength = vernierMajorTickLengthPixels;
-        outString(x, y + ticklength + 1, i, 1, 0);
+        outString(x, y + ticklength + 1, i*vsdValue, 1, 0);
       }
       drawLine(x, y, x, y + ticklength);
       x += vsd_pixels;
