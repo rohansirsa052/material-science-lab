@@ -5,8 +5,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tensile Test - Steel</title>
+    <title>Tensile Test - Iron</title>
     <link rel="stylesheet" href="css/main.css" />
+    <script>
+      var SAMPLE_ASSETS_PATH = "images/sample-iron/";
+    </script>
   </head>
   <body>
     <div id="app">
@@ -50,7 +53,7 @@
                     <li>Place the sample on the venier caliper.</li>
                     <li>Take the length and enter it below:</li>
                   </ul>
-                  <div class="mt-1">Length: <input id="step1Length" type="number" /> mm</div>
+                  <div class="mt-1">Length: <input id="step1Length" type="number" value="35" /> mm</div>
                 </div>
               </div>
 
@@ -64,7 +67,7 @@
                     <li>Take the diameter and enter it below:</li>
                   </ul>
 
-                  <div class="mt-1">Diameter: <input id="step2Dia" type="number" /> mm</div>
+                  <div class="mt-1">Diameter: <input id="step2Dia" type="number" value="3" /> mm</div>
                 </div>
               </div>
 
@@ -93,21 +96,12 @@
 
                   <canvas id="outputGraphA"></canvas>
 
-
-                  <canvas id="outputGraphB"></canvas>
-
                   <div class="mt-1 dataTable">
                     <table>
                       <thead>
                         <tr>
-                          <td rowspan="2">Load in kN</td>
-                          <td colspan="3">Extensometer Reading in Division</td>
-                          <td rowspan="2">Ivory Scale Reading(mm)</td>
-                        </tr>
-                        <tr>
-                          <td>A</td>
-                          <td>B</td>
-                          <td>Average</td>
+                          <td>Load in kN</td>
+                          <td>Dial Reading (mm)</td>
                         </tr>
                       </thead>
                       <tbody id="testData"></tbody>
@@ -115,7 +109,6 @@
                   </div>
                 </div>
               </div>
-
 
               <div id="step5" class="box disabled">
                 <div class="label">Step 5: Measure final length.</div>
@@ -129,7 +122,7 @@
                     <li>Take the length of the sample and enter it below.</li>
                   </ul>
 
-                  <div class="mt-1">Length: <input id="step5Length" type="number" /> mm</div>
+                  <div class="mt-1">Change in diameter is negligible.</div>
                 </div>
               </div>
 
@@ -143,7 +136,7 @@
                     <li>Take the diameter and enter it below:</li>
                   </ul>
 
-                  <div class="mt-1">Diameter: <input id="step6Dia" type="number" /> mm</div>
+                  <div class="mt-1">Change in diameter is negligible.</div>
                 </div>
               </div>
 
