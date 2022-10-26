@@ -1,6 +1,6 @@
 function VernierCaliper(canvas, ctx) {
-  let assetPath = "assets/vc/";
-  let sampleAssetPath = "assets/vc/";
+  let assetPath = "images/vc/";
+  let sampleAssetPath = "images/vc/";
   if(typeof SAMPLE_ASSETS_PATH !== 'undefined'){
     sampleAssetPath = SAMPLE_ASSETS_PATH;
   }
@@ -526,7 +526,7 @@ function VernierCaliper(canvas, ctx) {
 }
 
 function UTM(canvas, ctx) {
-  let assetPath = "assets/utm/";
+  let assetPath = "images/utm/";
   let itemsToLoad = 7;
   let itemsLoaded = 0;
   let imgUTM1 = new Image();
@@ -862,7 +862,7 @@ function UTM(canvas, ctx) {
 }
 
 function Sample1(canvas, ctx) {
-  let assetPath = "assets/sample/";
+  let assetPath = "images/sample/";
   if(typeof SAMPLE_ASSETS_PATH !== 'undefined'){
     assetPath = SAMPLE_ASSETS_PATH;
   }

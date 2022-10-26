@@ -1,21 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mechanical Metallurgy Lab</title>
-</head>
-<body>
-  <h1>List of Experiments</h1>
-  <p>
-    <ol>
-      <li><h3><a href="experiments/take-tour" target="_blank">Take tour of lab environment</a></h3></li>
-      <li><h3><a href="experiments/tensile-test-on-steel" target="_blank">Tensile Test and Stress Strain Curve of Steel</a></h3></li>
-      <li><h3><a href="experiments/tensile-test-on-iron" target="_blank">Tensile Test and Stress Strain Curve of Cast Iron</a></h3></li>
-      <!-- <li><h3><a href="experiments/2-tensile-test" target="_blank">Compression Test and Stress Strain Curve of Steel</a></h3></li> -->
-      <!-- <li><h3><a href="experiments/2-tensile-test" target="_blank">Compression Test and Stress Strain Curve of Cast Iron</a></h3></li> -->
-    </ol>
-  </p>
-</body>
+  <head>
+    <base href="/" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tensile Test - Steel</title>
+    <link rel="stylesheet" href="css/main.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="menu">
+        <div class="nav-tabs">
+          <div class="nav-item active" data-target="#tools">Tools</div>
+          <div class="nav-item" data-target="#instr">Instructions</div>
+        </div>
+
+        <div class="nav-content">
+          <div id="tools" class="nav-pane active">
+            <div class="list text-center">
+              <div>
+                <img label="utmMachine" src="images/img/utm-machine-logo.png" width="100" draggable="true" />
+                <p>UTM Machine</p>
+              </div>
+              <hr />
+              <div>
+                <img label="vernierCaliper" src="images/img/venier-caliper-logo-sm.png" draggable="true" width="200" />
+                <p>Vernier Caliper</p>
+              </div>
+              <hr />
+              <div>
+                <img label="sample1" src="images/img/sample1.png" draggable="true" width="200" />
+                <p>Test Sample</p>
+              </div>
+              <hr />
+            </div>
+          </div>
+
+          <div id="instr" class="nav-pane">
+            <div id="accordion" class="accordion">
+              <div id="step1" class="box disabled">
+                <div class="label">Step 1: Take length of the sample</div>
+                <div class="content">
+                  <ul>
+                    <li>
+                      Drag the sample and venier caliper from menu to the canvas. and take the length of the sample.
+                    </li>
+                    <li>Right click on venier caliper and click on pin.</li>
+                    <li>Place the sample on the venier caliper.</li>
+                    <li>Take the length and enter it below:</li>
+                  </ul>
+                  <div class="mt-1">Length: <input id="step1Length" type="number" /> mm</div>
+                </div>
+              </div>
+
+              <div id="step2" class="box disabled">
+                <div class="label">Step 2: Take the diameter of the sample</div>
+                <div class="content">
+                  <ul>
+                    <li>Right click on venier caliper and click on unload sample.</li>
+                    <li>Now, Right click on sample and click on rotate.</li>
+                    <li>Place the sample on the venier caliper.</li>
+                    <li>Take the diameter and enter it below:</li>
+                  </ul>
+
+                  <div class="mt-1">Diameter: <input id="step2Dia" type="number" /> mm</div>
+                </div>
+              </div>
+
+              <div id="step3" class="box disabled">
+                <div class="label">Step 3: Place sample on UTM machine.</div>
+                <div class="content">
+                  <ul>
+                    <li>Unload the sample from venier caliper.</li>
+                    <li>Remove the venier caliper by clicking on delete.</li>
+                    <li>Take the UTM machine from menu.</li>
+                    <li>Place the sample on the machine.</li>
+                    <li>You can adjust zoom level also.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div id="step4" class="box disabled">
+                <div class="label">Step 4: Start the test.</div>
+                <div class="content">
+                  <ul>
+                    <li>Click below buttons to start the machine.</li>
+                  </ul>
+                  <div class="mt-1">
+                    <button id="startTest">Start Test</button>
+                  </div>
+
+                  <canvas id="outputGraphA"></canvas>
+
+
+                  <canvas id="outputGraphB"></canvas>
+
+                  <div class="mt-1 dataTable">
+                    <table>
+                      <thead>
+                        <tr>
+                          <td rowspan="2">Load in kN</td>
+                          <td colspan="3">Extensometer Reading in Division</td>
+                          <td rowspan="2">Ivory Scale Reading(mm)</td>
+                        </tr>
+                        <tr>
+                          <td>A</td>
+                          <td>B</td>
+                          <td>Average</td>
+                        </tr>
+                      </thead>
+                      <tbody id="testData"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+
+              <div id="step5" class="box disabled">
+                <div class="label">Step 5: Measure final length.</div>
+                <div class="content">
+                  <ul>
+                    <li>Unload the sample from UTM.</li>
+                    <li>Remove the UTM by clicking on delete.</li>
+                    <li>Take the venier caliper from menu.</li>
+                    <li>Right click on venier caliper and click on "Pin"</li>
+                    <li>Place the sample on the venier caliper.</li>
+                    <li>Take the length of the sample and enter it below.</li>
+                  </ul>
+
+                  <div class="mt-1">Length: <input id="step5Length" type="number" /> mm</div>
+                </div>
+              </div>
+
+              <div id="step6" class="box disabled">
+                <div class="label">Step 6: Measure final diameter</div>
+                <div class="content">
+                  <ul>
+                    <li>Right click on venier caliper and click on unload sample.</li>
+                    <li>Now, Right click on sample and click on rotate.</li>
+                    <li>Place the sample on the venier caliper.</li>
+                    <li>Take the diameter and enter it below:</li>
+                  </ul>
+
+                  <div class="mt-1">Diameter: <input id="step6Dia" type="number" /> mm</div>
+                </div>
+              </div>
+
+              <div id="step7" class="box disabled">
+                <div class="label">Step 7: Results</div>
+                <div class="content"></div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn" id="btnNext" onclick="handle()">Next</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slider" id="slider"></div>
+      <div class="main">
+        <canvas class="dropzone" id="gui">Your browser does not support the HTML5 canvas tag.</canvas>
+      </div>
+    </div>
+
+    <script src="js/context.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+    <script src="js/index.js"></script>
+  </body>
 </html>
