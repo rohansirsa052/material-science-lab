@@ -65,6 +65,10 @@ function init() {
     if (vc) vc.paint();
     if (utm) utm.paint();
     if (sample1) sample1.paint();
+
+    // footer text
+    ctx.font = "12px serif";
+    ctx.fillText("Virtual Lab - IITK", canvas.width - 100, canvas.height - 10);
   };
 
   ctx.refresh();

@@ -2,42 +2,62 @@ const charts = {};
 const schema = ["loadKN", "dialReading"];
 const readingData = [
   [0, 0],
-  [2.5, 6],
-  [5, 14],
-  [7.5, 20],
-  [10, 29],
-  [12.5, 35],
-  [15, 43],
-  [17.5, 52],
-  [20, 60],
-  [22.5, 68],
-  [25, 78],
-  [27.5, 85],
-  [30, 94],
-  [32.5, 102],
-  [35, 112],
-  [37.5, 122],
-  [40, 132],
-  [42.5, 140],
-  [45, 150],
-  [47.5, 161],
-  [50, 174],
-  [52.5, 186],
-  [55, 198],
-  [57.5, 212],
-  [60, 230],
-  [62.5, 244],
-  [65, 262],
-  [67.5, 286],
-  [70, 324],
-  [72.5, 367],
-  [75, 405],
+  [3, 400],
+  [6, 800],
+  [9, 1200],
+  [12, 1600],
+  [16, 2000],
+  [19, 2400],
+  [22, 2800],
+  [24, 3200],
+  [27, 3600],
+  [30, 4000],
+  [33, 4400],
+  [36, 4800],
+  [39, 5200],
+  [44, 5600],
+  [50, 6000],
+  [56, 6400],
+  [62, 6800],
+  [68, 7200],
+  [74, 7600],
+  [82, 8000],
+  [93, 8400],
+  [106, 8800],
+  [120, 9200],
+  [129, 9600],
+  [139, 10000],
+  [165, 11000],
+  [196, 12000],
+  [230, 13000],
+  [270, 14000],
+  [314, 15000],
+  [370, 16000],
+  [426, 17000],
+  [480, 18000],
+  [545, 19000],
+  [613, 20000],
+  [690, 21000],
+  [756, 22000],
+  [830, 23000],
+  [900, 24000],
+  [975, 25000],
+  [1055, 26000],
+  [1127, 27000],
+  [1196, 28000],
 ];
 
-// x axis 
-const dialReading = [0, 6, 12, 16, 22, 28, 34, 40, 47, 52, 58, 65, 73, 80, 87, 94, 102, 110, 118, 126, 135, 144, 155, 165, 176, 189, 201, 216, 232, 248, 268, 284];
+// x axis
+const dialReading = [
+  0, 3, 6, 9, 12, 16, 19, 22, 24, 27, 30, 33, 36, 39, 44, 50, 56, 62, 68, 74, 82, 93, 106, 120, 129, 139, 165, 196, 230,
+  270, 314, 370, 426, 480, 545, 613, 690, 756, 830, 900, 975, 1055, 1127, 1196,
+];
 // y axis
-const loadKN = [0, 2.5, 5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 27.5, 30, 32.5, 35, 37.5, 40, 42.5, 45, 46.5, 48, 49.5, 52.1, 53.5, 54, 55, 56.8, 57.5, 60, 62, 64.2, 65.5];
+const loadKN = [
+  0, 400, 800, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000, 4400, 4800, 5200, 5600, 6000, 6400, 6800, 7200, 7600,
+  8000, 8400, 8800, 9200, 9600, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000, 21000,
+  22000, 23000, 24000, 25000, 26000, 27000, 28000,
+];
 
 var currPos = 0;
 
@@ -63,8 +83,8 @@ function handleStep1() {
     return;
   }
 
-  if (len < 35 || len > 40) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 35 to 40 mm)");
+  if (len < 7 || len > 10) {
+    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 7 to 10 mm)");
     return;
   }
 
@@ -88,8 +108,8 @@ function handleStep2() {
     return;
   }
 
-  if (len < 3 || len > 4) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 3 to 4 mm)");
+  if (len < 5 || len > 6) {
+    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 5 to 6 mm)");
     return;
   }
 
@@ -144,13 +164,13 @@ function handleStep3() {
     e.currentTarget.innerHTML = "Running...";
 
     utm.setConfig({
-      yield_point: 10, // no yield point
-      breaking_point: 0.65,
-      finish_point: 0.7,
+      yield_point: 0.3,
+      breaking_point: 0.25,
+      finish_point: 0.2,
     });
 
     setTimeout(() => {
-      utm.start(0.015, 1);
+      utm.start(0.02, -1);
     }, 4000);
 
     let intr = setInterval(() => {
@@ -215,6 +235,18 @@ function handleStep4() {
 
 function handleStep5() {
   let pane = document.getElementById("step5");
+  let len = document.getElementById("step5Length").value;
+  if (!len) {
+    alert("Please enter the length in step 5.");
+    return;
+  }
+
+  if (len < 8 || len > 9) {
+    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 8 to 9mm)");
+    return;
+  }
+
+  sampleFinalLength = len;
 
   pane.classList.add("done");
   pane.classList.remove("active");
@@ -228,7 +260,19 @@ function handleStep5() {
 
 function handleStep6() {
   let pane = document.getElementById("step6");
+  let len = document.getElementById("step6Dia").value;
 
+  if (!len) {
+    alert("Please enter the diameter in step 6.");
+    return;
+  }
+
+  if (len < 7 || len > 8) {
+    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 7 to 8mm)");
+    return;
+  }
+
+  sampleFinalDiameter = len;
   pane.classList.add("done");
   pane.classList.remove("active");
 
@@ -250,11 +294,11 @@ function handleStep6() {
       </tr>
       <tr>
         <td>Final Length</td>
-        <td>~${sampleLength} mm</td>
+        <td>~${sampleFinalLength} mm</td>
       </tr>
       <tr>
         <td>Final Diameter</td>
-        <td>~${sampleDiameter} mm</td>
+        <td>~${sampleFinalDiameter} mm</td>
       </tr>
     </table>
   `;

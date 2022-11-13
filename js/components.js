@@ -1,7 +1,7 @@
 function VernierCaliper(canvas, ctx) {
   let assetPath = "images/vc/";
   let sampleAssetPath = "images/vc/";
-  if(typeof SAMPLE_ASSETS_PATH !== 'undefined'){
+  if (typeof SAMPLE_ASSETS_PATH !== "undefined") {
     sampleAssetPath = SAMPLE_ASSETS_PATH;
   }
   let itemsToLoad = 12;
@@ -60,8 +60,8 @@ function VernierCaliper(canvas, ctx) {
   var msdValue = 1;
   var vernierScaleDivisions = 20;
   var msd_pixels = mainScaleLengthPixels / mainScaleDivisions;
-  var vsd_pixels = 5
-  let vsdValue = 1/2;
+  var vsd_pixels = 5;
+  let vsdValue = 1 / 2;
   var vernierScaleLengthPixels = 200;
 
   var precision = 2;
@@ -157,26 +157,30 @@ function VernierCaliper(canvas, ctx) {
 
     // draw sample
     if (sampleLoaded == 1) {
-      let x = -15;
-      let y = 342;
+      // horigontal sample
+      let x = 58;
+      let y = 325;
 
       let currentSample = imgSampleH;
       if (utm && utm.getSampleState() == 2) {
+        x = 64;
         currentSample = imgSampleCrackedH;
       }
 
       ctx.drawImage(currentSample, x, y, currentSample.width / 2, currentSample.height / 2);
     } else if (sampleLoaded == 2) {
-      let x = 57;
-      let y = 160;
+      // vertical sample
+      let x = 64;
+      let y = 162;
 
       let currentSample = imgSampleV;
       if (utm && utm.getSampleState() == 2) {
-        x = 55;
+        //cracked
+        x = 63;
         currentSample = imgSampleCrackedV;
       }
 
-      ctx.drawImage(currentSample, x, y, currentSample.width / 1.1, currentSample.height / 1.1);
+      ctx.drawImage(currentSample, x, y, currentSample.width / 2, currentSample.height / 2);
     }
 
     //draw  blade first
@@ -253,7 +257,7 @@ function VernierCaliper(canvas, ctx) {
       ticklength = vernierMinorTickLengthPixels;
       if (i % labelGap == 0) {
         ticklength = vernierMajorTickLengthPixels;
-        outString(x, y + ticklength + 1, i*vsdValue, 1, 0);
+        outString(x, y + ticklength + 1, i * vsdValue, 1, 0);
       }
       drawLine(x, y, x, y + ticklength);
       x += vsd_pixels;
@@ -549,10 +553,12 @@ function UTM(canvas, ctx) {
   let currentDialReading = 0;
   let currentLoad = 0;
   let config = {
-    'yield_point': 0.7,
-    'breaking_point': 0.9,
-    'finish_point': 1
-  }
+    yield_point: 0.7,
+    breaking_point: 0.9,
+    finish_point: 1,
+  };
+
+  var machineDirection = 1;
 
   let scale = 0.5;
 
@@ -603,19 +609,19 @@ function UTM(canvas, ctx) {
       let currentSample = sample;
       currentSampleState = 0;
 
-      if (yMovement > config.breaking_point) {
+      if (yMovement * machineDirection > config.breaking_point * machineDirection) {
         currentSample = sampleCracked;
         currentSampleState = 2;
-      } else if (yMovement > config.yield_point) {
+      } else if (yMovement * machineDirection > config.yield_point * machineDirection) {
         currentSample = sampleNecked;
         currentSampleState = 1;
       }
 
-      x = (xOffset + 227) * scale;
+      x = (xOffset + 221) * scale;
 
-      let yStart = (yOffset + 485 - yMovement * 90) * scale;
-      let yEnd = (50 + yMovement * 90) * scale;
-      ctx.drawImage(currentSample, x, yStart, (sample.width * scale) / 4, yEnd);
+      let yStart = (yOffset + 504 - yMovement * 90) * scale;
+      let yEnd = (20 + yMovement * 90) * scale;
+      ctx.drawImage(currentSample, x, yStart, (currentSample.width * scale) / 4, yEnd);
     }
 
     x = (xOffset + 105) * scale;
@@ -627,7 +633,7 @@ function UTM(canvas, ctx) {
     ctx.drawImage(imgUTMPiller2, x, y, imgUTMPiller2.width * scale, imgUTMPiller2.height * scale);
 
     x = (xOffset + 68) * scale;
-    let shift = yMovement * 90 - 120;
+    let shift = yMovement * 90 - 125;
     y = (yOffset - shift) * scale;
     ctx.drawImage(imgUTM2, x, y, imgUTM2.width * scale, imgUTM2.height * scale);
 
@@ -640,13 +646,13 @@ function UTM(canvas, ctx) {
   const start = (speed, direction) => {
     // speed 0 to 1
     // direction -1:down, 1: up
-
+    machineDirection = direction;
     if (direction == -1) {
       utmPlayRef = setInterval(() => {
         step = speed * 0.05;
         yMovement -= step;
 
-        if (yMovement <= 0) {
+        if (yMovement <= config.finish_point) {
           clearInterval(utmPlayRef);
           return;
         }
@@ -844,7 +850,7 @@ function UTM(canvas, ctx) {
     isRunning: () => (utmPlayRef ? true : false),
     loadSample1: () => {
       sampleLoaded = true;
-      yMovement = 0.55;
+      yMovement = 0.4;
     },
     getLoad: () => currentLoad,
     getDialReading: () => currentDialReading,
@@ -863,7 +869,7 @@ function UTM(canvas, ctx) {
 
 function Sample1(canvas, ctx) {
   let assetPath = "images/sample/";
-  if(typeof SAMPLE_ASSETS_PATH !== 'undefined'){
+  if (typeof SAMPLE_ASSETS_PATH !== "undefined") {
     assetPath = SAMPLE_ASSETS_PATH;
   }
 
