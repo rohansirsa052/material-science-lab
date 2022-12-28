@@ -4,82 +4,60 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Compression Test - Steel</title>
+    <title>Experiment 10</title>
     <link rel="stylesheet" href="css/main.css" />
     <script>
-      var SAMPLE_ASSETS_PATH = "images/sample3/";
+      var SAMPLE_ASSETS_PATH = "images/sample/";
     </script>
   </head>
   <body>
     <div id="app">
       <div class="menu">
         <div class="nav-tabs">
-          <div class="nav-item active" data-target="#tools">Tools</div>
-          <div class="nav-item" data-target="#instr">Instructions</div>
+          <!-- <div class="nav-item active" data-target="#tools">Tools</div> -->
+          <div class="nav-item active" data-target="#instr">Instructions</div>
         </div>
 
         <div class="nav-content">
-          <div id="tools" class="nav-pane active">
-            <div class="list text-center">
-              <div>
-                <img label="utmMachine" src="images/img/utm-machine-logo.png" width="100" draggable="true" />
-                <p>UTM Machine</p>
-              </div>
-              <hr />
-              <div>
-                <img label="vernierCaliper" src="images/img/venier-caliper-logo-sm.png" draggable="true" width="200" />
-                <p>Vernier Caliper</p>
-              </div>
-              <hr />
-              <div>
-                <img label="sample1" src="images/img/sample1.png" draggable="true" width="60" />
-                <p>Test Sample</p>
-              </div>
-              <hr />
-            </div>
-          </div>
-
-          <div id="instr" class="nav-pane">
+          <div id="instr" class="nav-pane active">
             <div id="accordion" class="accordion">
               <div id="step1" class="box disabled">
-                <div class="label">Step 1: Take length of the sample</div>
-                <div class="content">
-                  <ul>
-                    <li>
-                      Drag the sample and venier caliper from menu to the canvas. and take the length of the sample.
-                    </li>
-                    <li>Right click on venier caliper and click on pin.</li>
-                    <li>Place the sample on the venier caliper.</li>
-                    <li>Take the length and enter it below:</li>
-                  </ul>
-                  <div class="mt-1">Length: <input id="step1Length" type="number" value="35" /> mm</div>
+                <div class="label">Step 1: Select Sample</div>
+                <div class="content" style="display: flex; flex-wrap: wrap">
+                  <div class="p-1 pointer" onclick="loadSample('aluminium')" title="Click to select this sample.">
+                    <img src="images/sample/aluminium/logo.png" alt="" width="80" />
+                    <h6>Aluminium Sample</h6>
+                  </div>
+                  <div class="p-1 pointer" onclick="loadSample('brass')" title="Click to select this sample.">
+                    <img src="images/sample/brass/logo.png" alt="" width="80" />
+                    <h6>Brass Sample</h6>
+                  </div>
+                  <div class="p-1 pointer" onclick="loadSample('steel')" title="Click to select this sample.">
+                    <img src="images/sample/steel/logo.png" alt="" width="80" />
+                    <h6>Mild Steel Sample</h6>
+                  </div>
                 </div>
               </div>
 
               <div id="step2" class="box disabled">
-                <div class="label">Step 2: Take the diameter of the sample</div>
+                <div class="label">Step 2: Adjust machine and place the sample</div>
                 <div class="content">
                   <ul>
-                    <li>Right click on venier caliper and click on unload sample.</li>
-                    <li>Now, Right click on sample and click on rotate.</li>
-                    <li>Place the sample on the venier caliper.</li>
-                    <li>Take the diameter and enter it below:</li>
+                    <li>Drag the sample into the machine.</li>
                   </ul>
-
-                  <div class="mt-1">Diameter: <input id="step2Dia" type="number" value="3" /> mm</div>
                 </div>
               </div>
 
               <div id="step3" class="box disabled">
-                <div class="label">Step 3: Place sample on UTM machine.</div>
+                <div class="label">Step 3: Adjust the load.</div>
                 <div class="content">
-                  <ul>
+                  <!-- <ul>
                     <li>Unload the sample from venier caliper.</li>
                     <li>Remove the venier caliper by clicking on delete.</li>
                     <li>Take the UTM machine from menu.</li>
                     <li>Place the sample on the machine.</li>
                     <li>You can adjust zoom level also.</li>
-                  </ul>
+                  </ul> -->
                 </div>
               </div>
 
@@ -99,8 +77,9 @@
                     <table>
                       <thead>
                         <tr>
-                          <td>Load in kN</td>
-                          <td>Dial Reading (mm)</td>
+                          <td>Time (s)</td>
+                          <td>Penetration Depth (nm)</td>
+                          <td>Force (mN)</td>
                         </tr>
                       </thead>
                       <tbody id="testData"></tbody>
@@ -110,39 +89,13 @@
               </div>
 
               <div id="step5" class="box disabled">
-                <div class="label">Step 5: Measure final length.</div>
+                <div class="label">Step 5: Results.</div>
                 <div class="content">
                   <ul>
-                    <li>Unload the sample from UTM.</li>
-                    <li>Remove the UTM by clicking on delete.</li>
-                    <li>Take the venier caliper from menu.</li>
-                    <li>Right click on venier caliper and click on "Pin"</li>
-                    <li>Place the sample on the venier caliper.</li>
-                    <li>Take the length of the sample and enter it below.</li>
                   </ul>
-
-                  <div class="mt-1">Length: <input id="step5Length" type="number" /> mm</div>
                 </div>
               </div>
 
-              <div id="step6" class="box disabled">
-                <div class="label">Step 6: Measure final diameter</div>
-                <div class="content">
-                  <ul>
-                    <li>Right click on venier caliper and click on unload sample.</li>
-                    <li>Now, Right click on sample and click on rotate.</li>
-                    <li>Place the sample on the venier caliper.</li>
-                    <li>Take the diameter and enter it below:</li>
-                  </ul>
-
-                  <div class="mt-1">Diameter: <input id="step6Dia" type="number" /> mm</div>
-                </div>
-              </div>
-
-              <div id="step7" class="box disabled">
-                <div class="label">Step 7: Results</div>
-                <div class="content"></div>
-              </div>
             </div>
 
             <div class="actions">

@@ -50,6 +50,13 @@ p {
   width: calc(100vw - 280px);
 }
 
+.p-1{
+  padding: 8px;
+}
+.pointer{
+  cursor: pointer;
+}
+
 .slider {
   padding: 6px;
   height: 100%;

@@ -7,9 +7,11 @@ var dragging = false;
 var draggedElement;
 var ctx;
 
-var utm = null;
+var mit = null;
 var vc = null;
-var sample1 = null;
+var sample = null;
+var samplePath = null;
+var CURRENT_SAMPLE = 'aluminium';
 
 var canvasWidth = main.offsetWidth - 20;
 var canvasHeight = main.offsetHeight - 20;
@@ -19,11 +21,9 @@ function init() {
   ctx.font = "30px Arial";
   ctx.lineWidth = 1.5;
 
-  utm = UTM(canvas, ctx);
+  mit = MIT(canvas, ctx);
 
-  vc = VernierCaliper(canvas, ctx);
-
-  sample1 = Sample1(canvas, ctx);
+  sample = Sample(canvas, ctx);
 
   //Add event listeners
   window.addEventListener("resize", resize);
@@ -62,9 +62,8 @@ function init() {
       }
     }
 
-    if (vc) vc.paint();
-    if (utm) utm.paint();
-    if (sample1) sample1.paint();
+    if (mit) mit.paint();
+    if (sample) sample.paint();
 
     // footer text
     ctx.font = "12px serif";
@@ -72,6 +71,11 @@ function init() {
   };
 
   ctx.refresh();
+
+  setTimeout(() => {
+    mit.init();
+    sample.init();
+  }, 500);
 }
 
 function resize() {
@@ -83,62 +87,52 @@ function resize() {
 }
 
 function onMouseDownHandler(event) {
-  if (utm) utm.onMouseDownHandler(event);
-  if (vc) vc.onMouseDownHandler(event);
-  if (sample1) sample1.onMouseDownHandler(event);
+  if (mit) mit.onMouseDownHandler(event);
+  if (sample) sample.onMouseDownHandler(event);
 }
 
 function onMouseMoveHandler(event) {
-  if (utm) utm.onMouseMoveHandler(event);
-  if (vc) vc.onMouseMoveHandler(event);
-  if (sample1) sample1.onMouseMoveHandler(event);
+  if (mit) mit.onMouseMoveHandler(event);
+  if (sample) sample.onMouseMoveHandler(event);
 }
 
 function onMouseUpHandler(event) {
-  if (utm) utm.onMouseUpHandler(event);
-  if (vc) vc.onMouseUpHandler(event);
-  if (sample1) sample1.onMouseUpHandler(event);
+  if (mit) mit.onMouseUpHandler(event);
+  if (sample) sample.onMouseUpHandler(event);
 }
 
 function onContextMenuHandler(event) {
   event.preventDefault();
   event.stopPropagation();
 
-  if (utm) utm.onContextMenuHandler(event);
-  if (vc) vc.onContextMenuHandler(event);
-  if (sample1) sample1.onContextMenuHandler(event);
+  if (mit) mit.onContextMenuHandler(event);
+  if (sample) sample.onContextMenuHandler(event);
 }
 
 function onClickHandler(event) {
   event.preventDefault();
   event.stopPropagation();
 
-  if (utm) utm.onClickHandler(event);
-  if (vc) vc.onClickHandler(event);
-  if (sample1) sample1.onClickHandler(event);
+  if (mit) mit.onClickHandler(event);
+  if (sample) sample.onClickHandler(event);
 }
 
 function onMouseWheelHandler(event) {
   event.preventDefault();
   event.stopPropagation();
 
-  if (utm) utm.onMouseWheelHandler(event);
-  if (vc) vc.onMouseWheelHandler(event);
-  if (sample1) sample1.onMouseWheelHandler(event);
+  if (mit) mit.onMouseWheelHandler(event);
+  if (sample) sample.onMouseWheelHandler(event);
 }
 
 function onElementDrop(event) {
   if (!draggedElement) return;
-
   switch (draggedElement.getAttribute("label")) {
-    case "utmMachine":
-      utm.init();
+    case "mitMachine":
+      mit.init();
       break;
-    case "vernierCaliper":
-      vc.init();
-      break;
-    case "sample1":
-      sample1.init();
+    case "sample":
+      sample.init();
       break;
   }
 }
@@ -165,7 +159,7 @@ document.addEventListener("touchstart", (e) => {
   }
 
   let tar = e.touches[0].target;
-  if (tar.getAttribute("label") == "utmMachine" || tar.getAttribute("label") == "vernierCaliper") {
+  if (tar.getAttribute("label") == "mitMachine" || tar.getAttribute("label") == "vernierCaliper") {
     img = document.createElement("img");
     img.src = tar.src;
     img.setAttribute("label", tar.getAttribute("label"));
@@ -235,5 +229,23 @@ window.refresh = () => {
     });
   });
 };
+
+function loadSample(name) {
+
+  if (name == "aluminium") {
+    CURRENT_SAMPLE = "aluminium";
+  }
+
+  if (name == "brass") {
+    CURRENT_SAMPLE = "brass";
+  }
+
+  if (name == "steel") {
+    CURRENT_SAMPLE = "steel";
+  }
+
+  sample.init();
+  mit.unLoadSample();
+}
 
 window.refresh();

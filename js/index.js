@@ -1,66 +1,14 @@
 const charts = {};
-const schema = ["loadKN", "dialReading"];
-const readingData = [
-  [0, 0],
-  [3, 400],
-  [6, 800],
-  [9, 1200],
-  [12, 1600],
-  [16, 2000],
-  [19, 2400],
-  [22, 2800],
-  [24, 3200],
-  [27, 3600],
-  [30, 4000],
-  [33, 4400],
-  [36, 4800],
-  [39, 5200],
-  [44, 5600],
-  [50, 6000],
-  [56, 6400],
-  [62, 6800],
-  [68, 7200],
-  [74, 7600],
-  [82, 8000],
-  [93, 8400],
-  [106, 8800],
-  [120, 9200],
-  [129, 9600],
-  [139, 10000],
-  [165, 11000],
-  [196, 12000],
-  [230, 13000],
-  [270, 14000],
-  [314, 15000],
-  [370, 16000],
-  [426, 17000],
-  [480, 18000],
-  [545, 19000],
-  [613, 20000],
-  [690, 21000],
-  [756, 22000],
-  [830, 23000],
-  [900, 24000],
-  [975, 25000],
-  [1055, 26000],
-  [1127, 27000],
-  [1196, 28000],
-];
+// in seconds
+const time = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73];
 
-// x axis
-const dialReading = [
-  0, 3, 6, 9, 12, 16, 19, 22, 24, 27, 30, 33, 36, 39, 44, 50, 56, 62, 68, 74, 82, 93, 106, 120, 129, 139, 165, 196, 230,
-  270, 314, 370, 426, 480, 545, 613, 690, 756, 830, 900, 975, 1055, 1127, 1196,
-];
-// y axis
-const loadKN = [
-  0, 400, 800, 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000, 4400, 4800, 5200, 5600, 6000, 6400, 6800, 7200, 7600,
-  8000, 8400, 8800, 9200, 9600, 10000, 11000, 12000, 13000, 14000, 15000, 16000, 17000, 18000, 19000, 20000, 21000,
-  22000, 23000, 24000, 25000, 26000, 27000, 28000,
-];
+// in nm
+const penetrationDepth = [49, 192, 300, 387, 473, 542, 628, 659, 725, 785, 839, 887, 940, 987, 1040, 1095, 1189, 1193, 1237, 1278, 1326, 1406, 1444, 1491, 1494, 1529, 1568, 1608, 1674, 1712, 1738, 1751, 1750, 1754, 1760, 1763, 1767, 1769, 1773, 1774, 1769, 1754, 1743, 1732, 1719, 1704, 1689, 1679, 1664, 1646, 1634, 1621, 1606, 1595, 1577, 1561, 1541, 1525, 1507, 1488, 1473, 1453, 1434, 1411, 1387, 1364, 1331, 1290, 1287, 1220, 1093, 845, 646, 501];
+
+// in mN
+const force = [7, 43, 77, 109, 143, 175, 209, 227, 261, 293, 327, 359, 393, 425, 459, 494, 557, 560, 592, 626, 660, 724, 756, 790, 793, 827, 859, 893, 956, 991, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 982, 947, 912, 881, 846, 814, 780, 746, 714, 680, 648, 614, 579, 547, 513, 481, 447, 412, 381, 346, 315, 280, 246, 214, 180, 148, 114, 79, 77, 45, 11, 1, 0, 0];
 
 var currPos = 0;
-
 var currentStepProgress = 1;
 var sampleLength = 0;
 var sampleDiameter = 0;
@@ -77,19 +25,6 @@ function handle() {
 
 function handleStep1() {
   let pane = document.getElementById("step1");
-  let len = document.getElementById("step1Length").value;
-  if (!len) {
-    alert("Please enter the length in step 1.");
-    return;
-  }
-
-  if (len < 7 || len > 10) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 7 to 10 mm)");
-    return;
-  }
-
-  sampleLength = len;
-
   pane.classList.add("done");
   pane.classList.remove("active");
 
@@ -102,18 +37,11 @@ function handleStep1() {
 
 function handleStep2() {
   let pane = document.getElementById("step2");
-  let len = document.getElementById("step2Dia").value;
-  if (!len) {
-    alert("Please enter the diameter in step 2.");
+  
+  if(!mit.isSampleLoaded()) {
+    alert("Please load the sample on the MIT machine first!");
     return;
   }
-
-  if (len < 5 || len > 6) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 5 to 6 mm)");
-    return;
-  }
-
-  sampleDiameter = len;
 
   pane.classList.add("done");
   pane.classList.remove("active");
@@ -126,23 +54,14 @@ function handleStep2() {
 }
 
 function handleStep3() {
+  //adjust load step 
   let pane = document.getElementById("step3");
 
-  if (!utm || !utm.isActive()) {
-    alert("Please take UTM machine from menu first!");
-    return;
-  }
-
-  if (!utm.isSampleLoaded()) {
-    alert("Please load the sample on the UTM machine first!");
-    return;
-  }
-
-  //plot blank graph
+  //plot blank graph init graphs
   plotGraph(
     document.getElementById("outputGraphA").getContext("2d"),
     {
-      labels: dialReading,
+      labels: time,
       datasets: [
         {
           data: [],
@@ -151,8 +70,8 @@ function handleStep3() {
         },
       ],
     },
-    "Dial Reading in mm",
-    "Load in kN"
+    "Time (s)",
+    "Penetration Depth (nm)"
   );
 
   document.getElementById("btnNext").disabled = true;
@@ -163,49 +82,60 @@ function handleStep3() {
     document.getElementById("btnNext").disabled = true;
     e.currentTarget.innerHTML = "Running...";
 
-    utm.setConfig({
+    mit.setConfig({
       yield_point: 0.3,
       breaking_point: 0.25,
       finish_point: 0.2,
     });
 
     setTimeout(() => {
-      utm.start(0.02, -1);
+      mit.start(0.02, -1);
     }, 4000);
 
+    let totalSteps = force.length;
     let intr = setInterval(() => {
-      if (currPos >= readingData.length) {
+      if (currPos >= totalSteps) {
         clearInterval(intr);
         document.getElementById("startTest").disabled = false;
         document.getElementById("startTest").innerHTML = "Done";
-        utm.stop();
+        mit.stop();
         document.getElementById("btnNext").disabled = false;
         return;
       }
 
       tableBody.innerHTML += `
           <tr>
-            <td>${readingData[currPos][0]}</td>
-            <td>${readingData[currPos][1]}</td>
+            <td>${time[currPos]}</td>
+            <td>${penetrationDepth[currPos]}</td>
+            <td>${force[currPos]}</td>
           </tr>
         `;
       currPos++;
 
-      let progress1 = (loadKN.length / readingData.length) * currPos;
+      let progress1 = (penetrationDepth.length / totalSteps) * currPos;
       plotGraph(
         document.getElementById("outputGraphA").getContext("2d"),
         {
-          labels: dialReading,
+          labels: time,
           datasets: [
             {
-              data: loadKN.slice(0, progress1),
+              yAxisID: "A",
+              data: penetrationDepth.slice(0, progress1),
               borderColor: "#3e95cd",
               fill: false,
+              label: 'Penetration Depth',
+            },
+            {
+              yAxisID: "B",
+              data: force.slice(0, progress1),
+              borderColor: "brown",
+              fill: false,
+              label: 'Force',
             },
           ],
         },
-        "Dial Reading in mm",
-        "Load in kN"
+        "Penetration Depth (nm)",
+        "Time (s)"
       );
     }, 600);
   });
@@ -235,73 +165,17 @@ function handleStep4() {
 
 function handleStep5() {
   let pane = document.getElementById("step5");
-  let len = document.getElementById("step5Length").value;
-  if (!len) {
-    alert("Please enter the length in step 5.");
-    return;
-  }
-
-  if (len < 8 || len > 9) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 8 to 9mm)");
-    return;
-  }
-
-  sampleFinalLength = len;
 
   pane.classList.add("done");
   pane.classList.remove("active");
 
-  let next = document.getElementById("step6");
-  next.classList.add("active");
-  next.classList.remove("disabled");
+  // let next = document.getElementById("step6");
+  // next.classList.add("active");
+  // next.classList.remove("disabled");
 
-  currentStepProgress = 6;
-}
-
-function handleStep6() {
-  let pane = document.getElementById("step6");
-  let len = document.getElementById("step6Dia").value;
-
-  if (!len) {
-    alert("Please enter the diameter in step 6.");
-    return;
-  }
-
-  if (len < 7 || len > 8) {
-    alert("Wrong readings! Please take your reading correctly via venier caliper. (Range must be in b/w 7 to 8mm)");
-    return;
-  }
-
-  sampleFinalDiameter = len;
-  pane.classList.add("done");
-  pane.classList.remove("active");
-
-  let next = document.getElementById("step7");
-  next.classList.add("active");
-  next.classList.remove("disabled");
-
-  //last
   document.getElementById("btnNext").disabled = true;
-  document.querySelector("#step7 .content").innerHTML = `
-    <table>
-      <tr>
-        <td>Initial Length</td>
-        <td>${sampleLength} mm</td>
-      </tr>
-      <tr>
-        <td>Initial Diameter</td>
-        <td>${sampleDiameter} mm</td>
-      </tr>
-      <tr>
-        <td>Final Length</td>
-        <td>~${sampleFinalLength} mm</td>
-      </tr>
-      <tr>
-        <td>Final Diameter</td>
-        <td>~${sampleFinalDiameter} mm</td>
-      </tr>
-    </table>
-  `;
+  document.getElementById("btnNext").innerText = "Done";
+  // currentStepProgress = 6;
 }
 
 function plotGraph(graphCtx, data, labelX, labelY) {
@@ -318,7 +192,7 @@ function plotGraph(graphCtx, data, labelX, labelY) {
         responsive: true,
         animation: false,
         scaleOverride: true,
-        legend: { display: false },
+        // legend: { display: false },
         scales: {
           xAxes: [
             {
@@ -331,7 +205,7 @@ function plotGraph(graphCtx, data, labelX, labelY) {
                 beginAtZero: true,
                 steps: 20,
                 stepValue: 10,
-                max: Math.max(...dialReading),
+                max: Math.max(...time),
               },
               // stacked: true,
             },
@@ -339,6 +213,8 @@ function plotGraph(graphCtx, data, labelX, labelY) {
           yAxes: [
             {
               display: true,
+              position: 'left',
+              id: 'A',
               scaleLabel: {
                 display: true,
                 labelString: labelY,
@@ -347,7 +223,24 @@ function plotGraph(graphCtx, data, labelX, labelY) {
                 beginAtZero: true,
                 steps: 10,
                 stepValue: 5,
-                max: Math.max(...loadKN),
+                // max: Math.max(...penetrationDepth),
+                max: 2000
+              },
+            },
+            {
+              display: true,
+              position: 'right',
+              id: 'B',
+              scaleLabel: {
+                display: true,
+                labelString: "Force in mN",
+              },
+              ticks: {
+                beginAtZero: true,
+                steps: 10,
+                stepValue: 5,
+                // max: Math.max(...penetrationDepth),
+                max: 2000
               },
             },
           ],
