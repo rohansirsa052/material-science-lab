@@ -1,11 +1,12 @@
 function MIT(canvas, ctx) {
   let assetPath = "images/mit/";
-  let itemsToLoad = 4;
+  let itemsToLoad = 5;
   let itemsLoaded = 0;
   let imgMIT1 = new Image();
   let sample1Img = new Image();
   let sample2Img = new Image();
   let sample3Img = new Image();
+  let arrow = new Image();
   let xOffset = 0;
   let yOffset = 0;
   let yMovement = 0; /* 0 to 1 */
@@ -23,6 +24,7 @@ function MIT(canvas, ctx) {
     breaking_point: 0.9,
     finish_point: 1,
   };
+  let flashArrow = false;
 
   var machineDirection = 1;
 
@@ -42,6 +44,9 @@ function MIT(canvas, ctx) {
   sample2Img.onload = itemsLoaded++;
   sample3Img.src = "images/sample/steel/1.png";
   sample3Img.onload = itemsLoaded++;
+
+  arrow.src = assetPath + "arrow-h.png";
+  arrow.onload = itemsLoaded++;
   // sample.src = assetPath + "sample1.png";
   // sample.onload = itemsLoaded++;
 
@@ -68,7 +73,8 @@ function MIT(canvas, ctx) {
 
   const paint = () => {
     if (!isActive) return;
-
+    ctx.fillStyle = "black";
+    ctx.font = "9pt sans-serif";
     // if (sampleLoaded) {
     //   let currentSample = sample;
     //   currentSampleState = 0;
@@ -90,6 +96,14 @@ function MIT(canvas, ctx) {
 
     x = (xOffset + 80) * scale;
     y = (yOffset + 100) * scale;
+    // draw sample
+    flashArrow = !flashArrow;
+    if (!sampleLoaded && flashArrow) {
+      let _y = y + 200;
+      let _x = x + 100;
+      ctx.fillText("Drag sample here", _x, _y + 15);
+      ctx.drawImage(arrow, _x + 100, _y, arrow.width / 2, arrow.height / 2);
+    }
     ctx.drawImage(imgMIT1, x, y, imgMIT1.width * scale, imgMIT1.height * scale);
 
     // x = (xOffset + 295) * scale;

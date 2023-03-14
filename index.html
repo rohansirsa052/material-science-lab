@@ -21,19 +21,19 @@
         <div class="nav-content">
           <div id="instr" class="nav-pane active">
             <div id="accordion" class="accordion">
-              <div id="step1" class="box disabled">
+              <div id="step1" class="box active">
                 <div class="label">Step 1: Select Sample</div>
                 <div class="content" style="display: flex; flex-wrap: wrap">
                   <div class="p-1 pointer" onclick="loadSample('aluminium')" title="Click to select this sample.">
-                    <img src="images/sample/aluminium/logo.png" alt="" width="80" />
+                    <img src="images/sample/aluminium/logo.png" alt="" width="60" />
                     <h6>Aluminium Sample</h6>
                   </div>
                   <div class="p-1 pointer" onclick="loadSample('brass')" title="Click to select this sample.">
-                    <img src="images/sample/brass/logo.png" alt="" width="80" />
+                    <img src="images/sample/brass/logo.png" alt="" width="60" />
                     <h6>Brass Sample</h6>
                   </div>
                   <div class="p-1 pointer" onclick="loadSample('steel')" title="Click to select this sample.">
-                    <img src="images/sample/steel/logo.png" alt="" width="80" />
+                    <img src="images/sample/steel/logo.png" alt="" width="60" />
                     <h6>Mild Steel Sample</h6>
                   </div>
                 </div>
@@ -49,20 +49,7 @@
               </div>
 
               <div id="step3" class="box disabled">
-                <div class="label">Step 3: Adjust the load.</div>
-                <div class="content">
-                  <!-- <ul>
-                    <li>Unload the sample from venier caliper.</li>
-                    <li>Remove the venier caliper by clicking on delete.</li>
-                    <li>Take the UTM machine from menu.</li>
-                    <li>Place the sample on the machine.</li>
-                    <li>You can adjust zoom level also.</li>
-                  </ul> -->
-                </div>
-              </div>
-
-              <div id="step4" class="box disabled">
-                <div class="label">Step 4: Start the test.</div>
+                <div class="label">Step 3: Start the test.</div>
                 <div class="content">
                   <ul>
                     <li>Click below buttons to start the machine.</li>
@@ -88,14 +75,20 @@
                 </div>
               </div>
 
+              <div id="step4" class="box disabled">
+                <div class="label">Step 4: Activity</div>
+                <div class="content">Click next button to continue.</div>
+              </div>
+
               <div id="step5" class="box disabled">
                 <div class="label">Step 5: Results.</div>
                 <div class="content">
-                  <ul>
-                  </ul>
+                  <p>Indention Point Scaled view</p>
+                  <div>
+                    <img src="images/results/output.bmp" alt="" style="width: 100%" />
+                  </div>
                 </div>
               </div>
-
             </div>
 
             <div class="actions">
@@ -111,6 +104,7 @@
     </div>
 
     <script src="js/context.js"></script>
+    <script src="js/modal.js"></script>
     <script src="js/components.js"></script>
     <script src="js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>

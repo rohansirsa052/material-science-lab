@@ -76,6 +76,10 @@ function init() {
     mit.init();
     sample.init();
   }, 500);
+  
+  setInterval(() => {
+    ctx.refresh();
+  }, 800);
 }
 
 function resize() {
