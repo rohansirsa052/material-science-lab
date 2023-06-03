@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Experiment 10</title>
+    <title>Experiment 5</title>
     <link rel="stylesheet" href="css/main.css" />
     <script>
       var SAMPLE_ASSETS_PATH = "images/sample/";
@@ -24,29 +24,26 @@
               <div id="step1" class="box active">
                 <div class="label">Step 1: Select Sample</div>
                 <div class="content" style="display: flex; flex-wrap: wrap">
-                  <div class="p-1 pointer" onclick="loadSample('aluminium')" title="Click to select this sample.">
-                    <img src="images/sample/aluminium/logo.png" alt="" width="60" />
-                    <h6>Aluminium Sample</h6>
+                  <div class="p-1 pointer" onclick="loadSample('izod')" title="Click to select this sample.">
+                    <img src="images/sample.png" alt="" width="60" />
+                    <h6>Cast-iron Sample</h6>
                   </div>
-                  <div class="p-1 pointer" onclick="loadSample('brass')" title="Click to select this sample.">
-                    <img src="images/sample/brass/logo.png" alt="" width="60" />
-                    <h6>Brass Sample</h6>
-                  </div>
-                  <div class="p-1 pointer" onclick="loadSample('steel')" title="Click to select this sample.">
-                    <img src="images/sample/steel/logo.png" alt="" width="60" />
+                 
+                  <!-- <div class="p-1 pointer" onclick="loadSample('steel')" title="Click to select this sample.">
+                    <img src="images/sample1.png" alt="" width="60" />
                     <h6>Mild Steel Sample</h6>
-                  </div>
+                  </div> -->
                 </div>
               </div>
 
-              <div id="step2" class="box disabled">
+             <!-- <div id="step2" class="box disabled">
                 <div class="label">Step 2: Adjust machine and place the sample</div>
                 <div class="content">
                   <ul>
                     <li>Drag the sample into the machine.</li>
                   </ul>
                 </div>
-              </div>
+              </div> -->
 
               <div id="step3" class="box disabled">
                 <div class="label">Step 3: Start the test.</div>
@@ -75,10 +72,10 @@
                 </div>
               </div>
 
-              <div id="step4" class="box disabled">
+              <!-- <div id="step4" class="box disabled">
                 <div class="label">Step 4: Activity</div>
                 <div class="content">Click next button to continue.</div>
-              </div>
+              </div> -->
 
               <div id="step5" class="box disabled">
                 <div class="label">Step 5: Results.</div>
@@ -89,7 +86,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> 
 
             <div class="actions">
               <button class="btn" id="btnNext" onclick="handle()">Next</button>
@@ -102,13 +99,13 @@
         <canvas class="dropzone" id="gui">Your browser does not support the HTML5 canvas tag.</canvas>
       </div>
     </div>
-
     <script src="js/context.js"></script>
-    <script src="js/modal.js"></script>
-    <script src="js/components.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/componants.js"></script>
     <script src="js/main.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
-
     <script src="js/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script> 
+
+  
   </body>
 </html>

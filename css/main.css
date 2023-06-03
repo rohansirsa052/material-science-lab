@@ -43,17 +43,17 @@ hr {
 p {
   font-size: 12px;
   font-weight: 300;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
 }
 
 .main {
   width: calc(100vw - 280px);
 }
 
-.p-1{
+.p-1 {
   padding: 8px;
 }
-.pointer{
+.pointer {
   cursor: pointer;
 }
 
@@ -79,7 +79,6 @@ p {
   margin: 10px;
   background-color: rgb(240, 240, 240);
 }
-
 
 .nav-tabs {
   display: flex;
@@ -116,7 +115,6 @@ p {
   display: block;
 }
 
-
 .accordion .label {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 10px 15px;
@@ -135,13 +133,12 @@ p {
 }
 
 .accordion .label::before {
-  content: '+';
+  content: "+";
   position: absolute;
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
 }
-
 
 .accordion .content {
   background-color: white;
@@ -162,7 +159,7 @@ p {
 }
 
 .accordion .box.active .label::before {
-  content: '-';
+  content: "-";
 }
 
 .box table td {
@@ -214,7 +211,11 @@ p {
 
 .contextMenu {
   --menu-border: rgba(255, 255, 255, 0.08);
-  --menu-bg: linear-gradient(45deg, rgba(10, 20, 28, 0.2) 0%, rgba(10, 20, 28, 0.7) 100%);
+  --menu-bg: linear-gradient(
+    45deg,
+    rgba(10, 20, 28, 0.2) 0%,
+    rgba(10, 20, 28, 0.7) 100%
+  );
   --item-border: rgba(255, 255, 255, 0.1);
   --item-color: #fff;
   --item-bg-hover: rgba(255, 255, 255, 0.1);
@@ -279,10 +280,12 @@ p {
   background-color: var(--item-bg-hover);
 }
 
-.contextMenu[data-theme="light"
-
-] {
-  --menu-bg: linear-gradient(45deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.85) 100%);
+.contextMenu[data-theme="light"] {
+  --menu-bg: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
   --menu-border: rgba(0, 0, 0, 0.08);
   --item-border: rgba(0, 0, 0, 0.1);
   --item-color: #0a141c;
