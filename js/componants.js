@@ -24,7 +24,7 @@ function MIT(canvas, ctx) {
       breaking_point: 0.9,
       finish_point: 1,
     };
-    let flashArrow = false;
+    let flashArrow = false; 
   
     var machineDirection = 1;
   
