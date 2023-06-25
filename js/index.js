@@ -54,7 +54,7 @@ function handleStep2() {
   let pane = document.getElementById("step2");
 
   if (!mit.isSampleLoaded()) {
-    alert("Please load the sample on the MIT machine first!");
+    alert("Please load the sample on the machine first!");
     return;
   }
 
@@ -82,9 +82,9 @@ function handleStep2() {
 
   document.getElementById("startTest").addEventListener("click", (e) => {
     let tableBody = document.getElementById("testData");
-    e.currentTarget.disabled = true;
-    document.getElementById("btnNext").disabled = true;
-    e.currentTarget.innerHTML = "Running...";
+    // e.currentTarget.disabled = true;
+    // document.getElementById("btnNext").disabled = true;
+    // e.currentTarget.innerHTML = "Running...";
 
     mit.setConfig({
       yield_point: 0.3,
@@ -93,8 +93,10 @@ function handleStep2() {
     });
 
     setTimeout(() => {
-      mit.start(0.02, -1);
-    }, 4000);
+      mit.start();
+    }, 500);
+
+    return;
 
     let totalSteps = force.length;
     let intr = setInterval(() => {
