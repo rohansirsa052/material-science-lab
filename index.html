@@ -47,12 +47,14 @@
 
               <div id="step3" class="box disabled">
                 <div class="label">Step 3: Start the test.</div>
+                
                 <div class="content">
                   <ul>
                     <li>Click below buttons to start the machine.</li>
                   </ul>
                   <div class="mt-1">
                     <button id="startTest">Start Test</button>
+                    <button id="showGraphBtn" onclick="showGraph()" disabled>Plot</button>
                   </div>
 
                   <canvas id="outputGraphA"></canvas>
@@ -61,9 +63,9 @@
                     <table>
                       <thead>
                         <tr>
-                          <td>Time (s)</td>
-                          <td>Penetration Depth (nm)</td>
-                          <td>Force (mN)</td>
+                          <td>Temperature (C)</td>
+                          <td>Impact Energy (J)</td>
+                    
                         </tr>
                       </thead>
                       <tbody id="testData"></tbody>
@@ -72,10 +74,10 @@
                 </div>
               </div>
 
-              <!-- <div id="step4" class="box disabled">
+              <div id="step4" class="box disabled">
                 <div class="label">Step 4: Activity</div>
                 <div class="content">Click next button to continue.</div>
-              </div> -->
+              </div>
 
               <div id="step5" class="box disabled">
                 <div class="label">Step 5: Results.</div>

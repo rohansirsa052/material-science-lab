@@ -1,27 +1,69 @@
 const charts = {};
+const totalSteps= 10;
 const DATA_UPDATE_ANIMATION_DELAY = 600;
-// in seconds
-const time = [
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-  32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-  61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73,
+
+const temperature 
+//in degree C
+
+= [
+  -60.5,
+-60.5,
+-50.7,
+-50.7,
+-40.3,
+-40.3,
+-20.2,
+-20.2,
+-10.5,
+-10.5,
+-0.1,
+-0.1,
+-0.1,
+9.7,
+10,
+22.6,
+22.6,
+30.4,
+29.4,
+40.1,
+39.8,
+49.9,
+50.2,
+49.9,
+
 ];
 
-// in nm
-const penetrationDepth = [
-  49, 192, 300, 387, 473, 542, 628, 659, 725, 785, 839, 887, 940, 987, 1040, 1095, 1189, 1193, 1237, 1278, 1326, 1406,
-  1444, 1491, 1494, 1529, 1568, 1608, 1674, 1712, 1738, 1751, 1750, 1754, 1760, 1763, 1767, 1769, 1773, 1774, 1769,
-  1754, 1743, 1732, 1719, 1704, 1689, 1679, 1664, 1646, 1634, 1621, 1606, 1595, 1577, 1561, 1541, 1525, 1507, 1488,
-  1473, 1453, 1434, 1411, 1387, 1364, 1331, 1290, 1287, 1220, 1093, 845, 646, 501,
-];
+const Impact_Energy
+//Energy in Joules
+
+= [
+  5.4,
+  2.3,
+  6.3,
+  7.8,
+  5.6,
+  8.1,
+  5,
+  7.4,
+  9.5,
+  11.1,
+  15.6,
+  13.2,
+  10.7,
+  13.1,
+  11.3,
+  16.8,
+  22.6,
+  21.3,
+  26.2,
+  26.8,
+  31.4,
+  28,
+  31.3,
+  34.7,
+  ];
 
 // in mN
-const force = [
-  7, 43, 77, 109, 143, 175, 209, 227, 261, 293, 327, 359, 393, 425, 459, 494, 557, 560, 592, 626, 660, 724, 756, 790,
-  793, 827, 859, 893, 956, 991, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 982, 947, 912, 881, 846,
-  814, 780, 746, 714, 680, 648, 614, 579, 547, 513, 481, 447, 412, 381, 346, 315, 280, 246, 214, 180, 148, 114, 79, 77,
-  45, 11, 1, 0, 0,
-];
 
 var currPos = 0;
 var currentStepProgress = 1;
@@ -65,7 +107,7 @@ function handleStep2() {
   plotGraph(
     document.getElementById("outputGraphA").getContext("2d"),
     {
-      labels: time,
+      labels: temperature,
       datasets: [
         {
           data: [],
@@ -74,7 +116,7 @@ function handleStep2() {
         },
       ],
     },
-    "Time (s)",
+    "temperature (s)",
     "Penetration Depth (nm)"
   );
 
@@ -92,13 +134,14 @@ function handleStep2() {
       finish_point: 0.2,
     });
 
+    
     setTimeout(() => {
       mit.start();
     }, 500);
-
-    return;
-
-    let totalSteps = force.length;
+  
+  
+  
+     
     let intr = setInterval(() => {
       if (currPos >= totalSteps) {
         clearInterval(intr);
@@ -111,37 +154,37 @@ function handleStep2() {
 
       tableBody.innerHTML += `
             <tr>
-              <td>${time[currPos]}</td>
-              <td>${penetrationDepth[currPos]}</td>
-              <td>${force[currPos]}</td>
+              <td>${temperature[currPos]}</td>
+              <td>${ Impact_Energy[currPos]}</td>
+           
             </tr>
           `;
       currPos++;
 
-      let progress1 = (penetrationDepth.length / totalSteps) * currPos;
+      let progress1 = ( Impact_Energy.length / totalSteps) * currPos;
       plotGraph(
         document.getElementById("outputGraphA").getContext("2d"),
         {
-          labels: time,
+          labels: temperature,
           datasets: [
             {
               yAxisID: "A",
-              data: penetrationDepth.slice(0, progress1),
+              data:  Impact_Energy.slice(0, progress1),
               borderColor: "#3e95cd",
               fill: false,
-              label: "Penetration Depth",
+              label: "Temperature",
             },
-            {
-              yAxisID: "B",
-              data: force.slice(0, progress1),
-              borderColor: "brown",
-              fill: false,
-              label: "Force",
-            },
+            // {
+            //   yAxisID: "B",
+            //   data: force.slice(0, progress1),
+            //   borderColor: "brown",
+            //   fill: false,
+            //   label: "Force",
+            // },
           ],
         },
-        "Penetration Depth (nm)",
-        "Time (s)"
+        "Impact Energy  (J)",
+        "Temperature (C)"
       );
     }, DATA_UPDATE_ANIMATION_DELAY);
   });
@@ -173,17 +216,96 @@ function handleStep3() {
     body: [
       {
         page: 1,
-        title: "This is sample question 1?",
-        options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-        correct: 0,
-      },
-      {
-        page: 2,
-        title: "What does point U indicates in the graph?",
-        image: "images/stress-strain-curve2.jpg",
-        options: ["Tensile Strength", "Yield Strength", "Ultimate Tensile Strength", "Plastic Strength"],
+        title: "In the Charpy impact test the specimen is kept as:?",
+        options: ["Fixed end beam", "Simply supported beam", "Cantilever beam", " Overhanging beam"],
         correct: 2,
       },
+
+      {
+        page: 2,
+        title: "For impact test, T1 in the schematic below correspond to (T indicates temperature)?",
+        image: "images/QuestionsImages/fig4.png",
+        options: ["T1 - FTP", " T1 - DTT", " T1 - FATT", "T1 - NDT"],
+        correct: 1,
+      },
+    
+      {
+        page: 3,
+        title: "In impact testing, Ductility Transition Temperature is the temperature at which the energy is: ",
+      
+        options: [" 20 J", "30 J", "10 J", "40 J"],
+        correct: 1,
+      },
+    
+      {
+        page: 4,
+        title: "In a hypothetical curve given below for impact testing, A might correspond to: ",
+        image: "images/QuestionsImages/fig3.png",
+        options: ["  Mild steel", "  Low carbon steel", "Chromium ", "Nickel"],
+        correct: 4,
+      },
+
+          {
+        page: 5,
+        title: "Which of the following is correct? ",
+    
+        options: [" In Izod test, the specimen is kept horizontally", " The angle of the V-notch specimen is 60o", " In Charpy test, the specimen is kept horizontally", "The initial height of the pendulum is the impact energy"],
+        correct: 3,
+      },
+
+      {
+        page: 6,
+        title: "Fracture-appearance transition temperature, FATT corresponds to?",
+
+        options: ["  40 % cleavage fracture", " 50 % cleavage fracture", " 0 % cleavage fracture", "100 % cleavage fracture"],
+        correct: 2,
+      },
+   
+      {
+        page: 7,
+        title: "For impact test, T5 in the schematic below correspond to (T indicates temperature)",
+        image: "images/QuestionsImages/fig4.png",
+        options: ["  T5 - FTP", " T5 - DTT", " T5 - FATT", " T5 - NDT"],
+        correct: 4,
+      },
+
+
+
+      {
+        page: 8,
+        title: "Fracture surfaces of the same alloy are shown below from impact tests conducted at three different temperatures (T1, T2 and T3). Which one of them is true?",
+        image: "images/QuestionsImages/fig2.png",
+        options: ["  T1>T3>T2", "T3>T2>T1", " T3>T1>T2", "T2>T3>T1"],
+        correct: 1,
+      }, 
+
+
+      {
+        page: 9,
+        title: " In a hypothetical curve given below for impact testing, B might correspond to:",
+        image: "images/QuestionsImages/fig3.png",
+        options: ["  Copper", " Nickel", "Mild steel", " Aluminum "],
+        correct: 3,
+      },
+
+      {
+        page: 10,
+        title: " Which of the following is correct? ",
+  
+        options: [" In Izod test, the pendulum hits on the opposite surface to that containing notch", "The impact energy is related to difference between initial and final height", "In Charpy test, the pendulum hits on the same surface that contains notch", "In India, we predominantly use Izod impact test"],
+        correct: 2,
+      },
+   
+
+      {
+        page: 11,
+        title: "The strain rates in impact test are: ",
+        options: ["  Slightly higher than tensile tests", " lower than tensile tests", "Almost similar to tensile tests", " Much higher than tensile tess"],
+        correct: 4,
+      },
+
+
+
     ],
     onClose: handleStep4,
   });
@@ -245,7 +367,7 @@ function plotGraph(graphCtx, data, labelX, labelY) {
                 beginAtZero: true,
                 steps: 20,
                 stepValue: 10,
-                max: Math.max(...time),
+                max: Math.max(...temperature),
               },
               // stacked: true,
             },
@@ -263,26 +385,26 @@ function plotGraph(graphCtx, data, labelX, labelY) {
                 beginAtZero: true,
                 steps: 10,
                 stepValue: 5,
-                // max: Math.max(...penetrationDepth),
-                max: 2000,
+                 max: Math.max(... Impact_Energy),
+                //max: 2000,
               },
             },
-            {
-              display: true,
-              position: "right",
-              id: "B",
-              scaleLabel: {
-                display: true,
-                labelString: "Force in mN",
-              },
-              ticks: {
-                beginAtZero: true,
-                steps: 10,
-                stepValue: 5,
-                // max: Math.max(...penetrationDepth),
-                max: 2000,
-              },
-            },
+            // {
+            //   display: true,
+            //   position: "right",
+            //   id: "B",
+            //   scaleLabel: {
+            //     display: true,
+            //     labelString: "Force in mN",
+            //   },
+            //   ticks: {
+            //     beginAtZero: true,
+            //     steps: 10,
+            //     stepValue: 5,
+            //     // max: Math.max(... Impact_Energy),
+            //     max: 2000,
+            //   },
+            // },
           ],
         },
       },
