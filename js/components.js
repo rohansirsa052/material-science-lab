@@ -31,7 +31,7 @@ function MIT(canvas, ctx) {
   imgMIT2.src = assetPath + "2.png";
   imgMIT2.onload = itemsLoaded++;
 
-  sample1Img.src = assetPath + "sample.png";
+  sample1Img.src = assetPath + "sample_2_copy.png";
   sample1Img.onload = itemsLoaded++;
 
 
@@ -74,8 +74,8 @@ function MIT(canvas, ctx) {
       // } else if (CURRENT_SAMPLE == "steel") {
       //   currentSample = sample3Img;
       // }
-      let _x = (xOffset + 25) * scale;
-      let _y = (yOffset + 415) * scale;
+      let _x = (xOffset + 250) * scale;
+      let _y = (yOffset + 450) * scale;
       ctx.drawImage(currentSample, _x, _y, (currentSample.width * scale) / 3, (currentSample.height * scale) / 3);
     }
 
