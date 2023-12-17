@@ -24,18 +24,23 @@
               <div id="step1" class="box active">
                 <div class="label">Step 1: Select Sample</div>
                 <div class="content" style="display: flex; flex-wrap: wrap">
-                  <div class="p-1 pointer" onclick="loadSample('aluminium')" title="Click to select this sample.">
-                    <img src="images/sample/aluminium/logo.png" alt="" width="60" />
-                    <h6>Aluminium Sample</h6>
-                  </div>
+                 
                   <div class="p-1 pointer" onclick="loadSample('brass')" title="Click to select this sample.">
-                    <img src="images/sample/brass/logo.png" alt="" width="60" />
-                    <h6>Brass Sample</h6>
+                    <img src="images/sample/brass/sample.png" alt="" width="60" />
+                    <h6>Cast iron sample</h6>
                   </div>
-                  <div class="p-1 pointer" onclick="loadSample('steel')" title="Click to select this sample.">
-                    <img src="images/sample/steel/logo.png" alt="" width="60" />
-                    <h6>Mild Steel Sample</h6>
+                 
+                </div>
+              </div>
+              <div id="step9" class="box active">
+                <div class="label">Step 2: Select Load</div>
+                <div class="content" style="display: flex; flex-wrap: wrap">
+                 
+                  <div class="p-1 pointer"onclick="loadWeightClicked()" title="Click to select this sample.">
+                    <img src="images/sample/aluminium/1.png" alt="" width="60" />
+                    <h6>Cast iron sample</h6>
                   </div>
+                 
                 </div>
               </div>
 
@@ -64,9 +69,9 @@
                     <table>
                       <thead>
                         <tr>
-                          <td>Time (s)</td>
-                          <td>Penetration Depth (nm)</td>
-                          <td>Force (mN)</td>
+                          
+                          <td>No. of cycles (in No.s)</td>
+                          <td> Amplitude strss (MPa)</td>
                         </tr>
                       </thead>
                       <tbody id="testData"></tbody>

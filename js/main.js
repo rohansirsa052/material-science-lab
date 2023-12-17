@@ -252,4 +252,13 @@ function loadSample(name) {
   mit.unLoadSample();
 }
 
+function loadWeightClicked() {
+  loadWeight = true;
+  // You can add additional logic or actions related to loadWeight if needed
+  console.log("Load weight clicked. loadWeight is now set to true.");
+  mit.setWeightSampleState(loadWeight);
+  
+}
+
+
 window.refresh();

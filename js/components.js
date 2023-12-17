@@ -1,4 +1,6 @@
 function MIT(canvas, ctx) {
+
+
   let assetPath = "images/mit/";
   let itemsToLoad = 5;
   let itemsLoaded = 0;
@@ -19,6 +21,7 @@ function MIT(canvas, ctx) {
   let currentSampleState = 0; //0: no crack; 1: necked; 2:cracked
   let currentDialReading = 0;
   let currentLoad = 0;
+  let loadWeight= false;
   let config = {
     yield_point: 0.7,
     breaking_point: 0.9,
@@ -27,6 +30,8 @@ function MIT(canvas, ctx) {
   let flashArrow = false;
 
   var machineDirection = 1;
+
+ 
 
   let scale = 1.2;
 
@@ -40,7 +45,7 @@ function MIT(canvas, ctx) {
 
   sample1Img.src = "images/sample/aluminium/1.png";
   sample1Img.onload = itemsLoaded++;
-  sample2Img.src = "images/sample/brass/1.png";
+  sample2Img.src = "images/sample/brass/sample.png";
   sample2Img.onload = itemsLoaded++;
   sample3Img.src = "images/sample/steel/1.png";
   sample3Img.onload = itemsLoaded++;
@@ -99,7 +104,7 @@ function MIT(canvas, ctx) {
     // draw sample
     flashArrow = !flashArrow;
     if (!sampleLoaded && flashArrow) {
-      let _y = y + 200;
+      let _y = y + 80;
       let _x = x + 100;
       ctx.fillText("Drag sample here", _x, _y + 15);
       ctx.drawImage(arrow, _x + 100, _y, arrow.width / 2, arrow.height / 2);
@@ -119,17 +124,24 @@ function MIT(canvas, ctx) {
     // ctx.drawImage(imgUTM1, x, y, imgUTM1.width * scale, imgUTM1.height * scale);
 
     if (sampleLoaded) {
-      let currentSample = sample1Img;
-      if (CURRENT_SAMPLE == "aluminium") {
-        currentSample = sample1Img;
-      } else if (CURRENT_SAMPLE == "brass") {
-        currentSample = sample2Img;
-      } else if (CURRENT_SAMPLE == "steel") {
-        currentSample = sample3Img;
+      let currentSample = sample2Img;
+      let currentWeight=  sample1Img;
+      // if (CURRENT_SAMPLE == "izod") {
+      //   currentSample = sample1Img;
+      // } else if (CURRENT_SAMPLE == "brass") {
+      //   currentSample = sample2Img;
+      // } else if (CURRENT_SAMPLE == "steel") {
+      //   currentSample = sample3Img;
+      // }
+      let _x = (xOffset + 440) * scale;
+      let _y = (yOffset + 170) * scale;
+      ctx.drawImage(currentSample, _x, _y, (currentSample.width * scale) / 14, (currentSample.height * scale) / 14);
+    
+      if(loadWeight){
+      let _x2 = (xOffset + 395) * scale;
+      let _y2 = (yOffset + 400) * scale;
+      ctx.drawImage(currentWeight, _x2, _y2, (currentWeight.width * scale) / 14, (currentWeight.height * scale) / 14);
       }
-      let x = (xOffset + 304) * scale;
-      let y = (yOffset + 281) * scale;
-      ctx.drawImage(currentSample, x, y, (currentSample.width * scale) / 6, (currentSample.height * scale) / 6);
     }
 
     ctx.save();
@@ -352,6 +364,7 @@ function MIT(canvas, ctx) {
     getDialReading: () => currentDialReading,
     isSampleLoaded: () => sampleLoaded,
     getSampleState: () => currentSampleState,
+    setWeightSampleState: (val) =>loadWeight=val,
     onMouseDownHandler: onMouseDownHandler,
     onMouseUpHandler: onMouseUpHandler,
     onMouseMoveHandler: onMouseMoveHandler,
@@ -391,9 +404,8 @@ function Sample(canvas, ctx) {
 
   let isActive = false;
 
-  sample1Img.src = "images/sample/aluminium/1.png";
-  sample1Img.onload = itemsLoaded++;
-  sample2Img.src = "images/sample/brass/1.png";
+  ;
+  sample2Img.src = "images/sample/brass/sample.png";
   sample2Img.onload = itemsLoaded++;
   sample3Img.src = "images/sample/steel/1.png";
   sample3Img.onload = itemsLoaded++;
