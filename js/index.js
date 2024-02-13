@@ -171,17 +171,80 @@ function handleStep3() {
     body: [
       {
         page: 1,
-        title: "This is sample question 1?",
-        options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+        title: "The Vickers hardness in HV if the load applied is 100 grams and indentation size (diagonal length) is 43 microns (choose one of the closest one)?",
+        options: ["100", "400", "980", "1280"],
         correct: 0,
       },
       {
         page: 2,
-        title: "What does point U indicates in the graph?",
-        image: "images/stress-strain-curve2.jpg",
-        options: ["Tensile Strength", "Yield Strength", "Ultimate Tensile Strength", "Plastic Strength"],
+        title: " Rockwell hardness is measured by measuring the:",
+        
+        options: [" Diameter of indentation", "Projected area of Indentation", "Depth of penetration of indenter", "Rebound height of indenter"],
         correct: 2,
       },
+      {
+        page: 3,
+        title: "  If the load applied is 3000 kgf, ball diameter is 10 mm, and indent impression diameter is 3 mm, the Brinell hardness (in BHN) is:",
+        
+        options: ["1245", "415", "208", "520"],
+        correct: 1,
+      },
+      {
+        page: 4,
+        title: "The Brinell hardness testing uses",
+        
+        options: [" Tungsten Carbide sphere", "Steel cone", "Diamond cone", "Diamond pyramid"],
+        correct: 0,
+      },
+      {
+        page: 5,
+        title: "Which of the following test provide measurements of surface property?",
+        
+        options: ["Tensile test", "Fatigue test", "Impact test", "Hardness test"],
+        correct: 3,
+      },
+      {
+        page: 6,
+        title: "The Vickers hardness in MPa if the load applied is 100 grams and indentation size (diagonal length) is 43 microns (choose one of the closest one)?",
+        
+        options: ["100", "980", "208", "520"],
+        correct: 1,
+      },
+    
+      {
+        page: 7,
+        title: "The included angle in the Vickers hardness test is",
+        
+        options: ["136", "90", "120", "60"],
+        correct: 0,
+      },
+      {
+        page: 8,
+        title: " Rockwell indenter uses",
+        
+        options: ["Diamond pyramid", "Diamond cone", "Steel cone", "Tungsten carbide ball"],
+        correct: 0,
+      },
+      {
+        page: 9,
+        title: " Penetration Indicated by each unit in dial in Rockwell test",
+        
+        options: ["0.2 mm", "0.02 mm", "0.002 mm", "0.0002 mm"],
+        correct: 2,
+      },
+      {
+        page: 10,
+        title: `In Brinell hardness number "75 HB 10/500/30", what does 10 stands for?`,
+        options: ["1245", "415", "208", "520"],
+        correct: 1,
+      },
+      {
+        page: 11,
+        title: `If the length of the two diagonals in Vickers hardness test is 100 µm and 110 µm, then what is the average diagonal length?`,
+        options: ["105", "210", "100", "110"],
+        correct: 0,
+      },
+     
     ],
     onClose: handleStep4,
   });

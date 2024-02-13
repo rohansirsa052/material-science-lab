@@ -16,12 +16,17 @@ var CURRENT_SAMPLE = 'aluminium';
 var canvasWidth = main.offsetWidth - 20;
 var canvasHeight = main.offsetHeight - 20;
 
-function init() {
+function init(machineName) {
   ctx = canvas.getContext("2d");
   ctx.font = "30px Arial";
   ctx.lineWidth = 1.5;
-
+ if(machineName=== "aluminium"){
   mit = MIT(canvas, ctx);
+ }
+  
+  else{
+    mit = MIT2(canvas, ctx);
+  }
 
   sample = Sample(canvas, ctx);
 
